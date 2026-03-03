@@ -41,7 +41,7 @@ header li {
 }
 
 header {
-  height: 500px;
+  height: auto;
   font-size: 35px;
   display: flex;
   justify-content: space-between;
@@ -67,16 +67,55 @@ header {
   border: 2px solid black;
 }
 
+.img-container-header {
+  margin-right: 50px;
+}
+
+.contattami-header {
+  background-color: grey;
+  padding: 3px;
+  border-radius: 7px;
+  border: 2px solid black;
+}
+
 .progetti-card {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   background-color: red;
+  align-content: space-around;
+  justify-content: space-around;
+  padding: 40px 150px;
+  text-align: center;
+}
+
+.card-right {
+  align-self: flex-end;
 }
 
 .skill-container {
   display: flex;
   justify-content: space-around;
   background-color: pink;
+}
+
+.skill-inside-container {
+  background-color: grey;
+  border: 2px solid black;
+  padding: 5px;
+  font-size: 20px;
+  border-radius: 6px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 50px;
+}
+
+.btn-footer {
+  font-size: 20px;
+  text-align: center;
 }
 
 * {
@@ -120,4 +159,11 @@ header {
 
 footer {
   grid-area: footer;
+}
+
+@media (max-width: 1200px) {
+  body {
+    width: 100%;
+    margin: 0;
+  }
 }/*# sourceMappingURL=style.css.map */

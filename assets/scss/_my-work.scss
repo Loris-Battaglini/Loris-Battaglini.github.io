@@ -1,3 +1,11 @@
 .progetti-card{display: flex;
-flex-direction: row;
-background-color: red;}
+flex-direction: column;
+background-color: red;
+align-content: space-around;
+justify-content: space-around;
+padding: 40px 150px;
+// flex-wrap: wrap;
+text-align: center;
+}
+
+.card-right{align-self: flex-end;}
