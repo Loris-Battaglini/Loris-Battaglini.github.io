@@ -40,7 +40,7 @@ align-items: center;}
 
 
   header{
-    height: 500px;
+    height: auto;
     font-size: 35px;
     display: flex; 
     justify-content: space-between; 
@@ -57,5 +57,9 @@ align-items: center;}
       display: inline-block;
       padding: 5px 10px;
       border: 2px solid black;}
+
+      .img-container-header{margin-right: 50px;}
+
+      .contattami-header{background-color: grey; padding: 3px; border-radius: 7px; border: 2px solid black;}
 
       

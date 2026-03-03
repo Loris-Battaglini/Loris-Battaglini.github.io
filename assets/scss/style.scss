@@ -1,6 +1,8 @@
 @use "header";
 @use "my-work";
 @use "skill";
+@use "cosa-faccio-come-lo-faccio";
+@use "footer";
 
 
 
@@ -32,3 +34,9 @@ header { grid-area: header; } // Niente virgolette!
 .come-lo-faccio { grid-area: aside-right; }
 .progetti-card { grid-area: my-work; }
 footer { grid-area: footer; }
+
+@media(max-width: 1200px){
+body{width: 100%;
+margin: 0;}
+
+}
