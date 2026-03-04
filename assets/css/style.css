@@ -97,6 +97,27 @@ footer {
   animation: section-focus-fade 1.4s ease;
 }
 
+.section-focus .skill-inside-container,
+.section-focus .learning-dropdown,
+.section-focus .cosa-faccio,
+.section-focus .come-lo-faccio,
+.section-focus .metodo-list li,
+.section-focus .project-card,
+.section-focus form,
+.section-focus input,
+.section-focus textarea {
+  border-color: rgba(47, 118, 210, 0.38);
+  box-shadow: 0 0 0 2px rgba(47, 118, 210, 0.1);
+  animation: section-inner-focus-fade 1.35s ease;
+}
+
+.section-focus .project-card,
+.section-focus .skill-inside-container,
+.section-focus .cosa-faccio,
+.section-focus .come-lo-faccio {
+  background: linear-gradient(180deg, #ffffff, #f4f9ff);
+}
+
 @keyframes section-focus-fade {
   0% {
     box-shadow:
@@ -112,6 +133,18 @@ footer {
     box-shadow:
       0 0 0 4px rgba(47, 118, 210, 0.2),
       0 26px 46px rgba(20, 34, 59, 0.16);
+  }
+}
+
+@keyframes section-inner-focus-fade {
+  0% {
+    box-shadow: 0 0 0 0 rgba(47, 118, 210, 0.24);
+  }
+  70% {
+    box-shadow: 0 0 0 4px rgba(47, 118, 210, 0.08);
+  }
+  100% {
+    box-shadow: 0 0 0 2px rgba(47, 118, 210, 0.1);
   }
 }
 
