@@ -175,7 +175,7 @@
           <div class="card-body">
             <h5 class="card-title">Landing Prodotto</h5>
             <p class="card-text">Layout orientato alla presentazione del servizio e al contatto diretto.</p>
-            <a href="#" class="btn btn-primary">Visita il sito</a>
+            <a href="https://lorispc11052001-stack.github.io/Coffe-Studio/" class="btn btn-primary" target="_blank">Visita il sito</a>
           </div>
         </article>
 
@@ -225,5 +225,62 @@
       </form>
     </footer>
   </div>
+  <script>
+    (function () {
+      const navLinks = document.querySelectorAll('.header-nav a[href^="#"], .contattami-header[href^="#"]');
+      let activeTimer = null;
+      let activeSection = null;
+
+      function scrollToCenter(element) {
+        const rect = element.getBoundingClientRect();
+        const sectionCenter = window.scrollY + rect.top + rect.height / 2;
+        const viewportCenter = window.innerHeight / 2;
+        const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+        const targetScroll = Math.min(maxScroll, Math.max(0, sectionCenter - viewportCenter));
+        window.scrollTo({ top: targetScroll, behavior: 'smooth' });
+      }
+
+      function highlightSection(targetId) {
+        const section = document.querySelector(targetId);
+        if (!section) return;
+
+        if (activeSection && activeSection !== section) {
+          activeSection.classList.remove('section-focus');
+        }
+
+        section.classList.remove('section-focus');
+        void section.offsetWidth;
+        section.classList.add('section-focus');
+        activeSection = section;
+
+        if (activeTimer) clearTimeout(activeTimer);
+        activeTimer = setTimeout(function () {
+          section.classList.remove('section-focus');
+          if (activeSection === section) activeSection = null;
+        }, 1700);
+      }
+
+      navLinks.forEach(function (link) {
+        link.addEventListener('click', function (event) {
+          const targetId = link.getAttribute('href');
+          if (!targetId || targetId === '#') return;
+          const targetSection = document.querySelector(targetId);
+          if (!targetSection) return;
+
+          const isMobileViewport = window.matchMedia('(max-width: 992px)').matches;
+          const useDefaultTopScroll = isMobileViewport && targetId === '#projects';
+
+          if (!useDefaultTopScroll) {
+            event.preventDefault();
+            scrollToCenter(targetSection);
+          }
+
+          setTimeout(function () {
+            highlightSection(targetId);
+          }, useDefaultTopScroll ? 360 : 460);
+        });
+      });
+    })();
+  </script>
 </body>
 </html>
