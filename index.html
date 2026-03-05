@@ -128,29 +128,58 @@
     <section class="metodo-section" id="metodo">
       <div class="section-heading">
         <h3>Cosa faccio e come lo faccio</h3>
-        <p>Un processo chiaro, con due aree connesse, pensato per dare direzione al progetto.</p>
+        <p>Due percorsi distinti ma complementari: risultati concreti per te e metodo operativo chiaro per arrivarci.</p>
       </div>
 
       <div class="metodo-grid">
-        <aside class="cosa-faccio">
+        <article class="metodo-track metodo-track-value">
           <h3>Cosa faccio per te</h3>
-          <ul class="metodo-list">
-            <li>Trasformo la tua idea in un sito professionale orientato agli obiettivi.</li>
-            <li>Organizzo i contenuti per mostrare subito il valore dei tuoi servizi.</li>
-            <li>Costruisco pagine che guidano il visitatore verso la richiesta di contatto.</li>
-            <li>Realizzo una base solida, pronta per crescere con il tuo progetto.</li>
+          <ul class="metodo-timeline">
+            <li class="metodo-item">
+              <p>Chiarisco subito la tua proposta, cosi chi arriva capisce in pochi secondi perche scegliere te.</p>
+              <span class="metodo-point" aria-hidden="true"></span>
+            </li>
+            <li class="metodo-item">
+              <p>Valorizzo prove e credibilita con sezioni che fanno percepire affidabilita e qualita del servizio.</p>
+              <span class="metodo-point" aria-hidden="true"></span>
+            </li>
+            <li class="metodo-item">
+              <p>Guido il visitatore verso l'azione con un percorso di contatto chiaro, rapido e senza frizioni.</p>
+              <span class="metodo-point" aria-hidden="true"></span>
+            </li>
+            <li class="metodo-item">
+              <p>Ti consegno una base pronta a crescere con campagne, nuovi contenuti e obiettivi futuri.</p>
+              <span class="metodo-point" aria-hidden="true"></span>
+            </li>
           </ul>
-        </aside>
+        </article>
 
-        <aside class="come-lo-faccio">
+        <article class="metodo-track metodo-track-process">
           <h3>Come lo faccio</h3>
-          <ul class="metodo-list">
-            <li>Definisco obiettivi, target e messaggio prima di scrivere il codice.</li>
-            <li>Progetto una gerarchia visiva chiara e un percorso utente lineare.</li>
-            <li>Sviluppo con codice modulare, semplice da mantenere e ampliare.</li>
-            <li>Verifico responsive, performance e leggibilita prima della consegna.</li>
+          <ul class="metodo-timeline">
+            <li class="metodo-item">
+              <p>Parto da un briefing strategico per definire obiettivi, target, tono e priorita commerciali.</p>
+              <span class="metodo-point" aria-hidden="true"></span>
+            </li>
+            <li class="metodo-item">
+              <p>Disegno struttura e gerarchia visiva per guidare attenzione, comprensione e decisione.</p>
+              <span class="metodo-point" aria-hidden="true"></span>
+            </li>
+            <li class="metodo-item">
+              <p>Sviluppo in modo modulare e responsive, con codice pulito e facile da mantenere nel tempo.</p>
+              <span class="metodo-point" aria-hidden="true"></span>
+            </li>
+            <li class="metodo-item">
+              <p>Eseguo ottimizzazioni finali su performance, leggibilita e UX prima della consegna.</p>
+              <span class="metodo-point" aria-hidden="true"></span>
+            </li>
           </ul>
-        </aside>
+        </article>
+      </div>
+
+      <div class="metodo-cta">
+        <p>Se vuoi, in 15 minuti ti mostro come applicare questo impianto al tuo progetto.</p>
+        <a href="#form" class="metodo-cta-link">Richiedi una call conoscitiva</a>
       </div>
     </section>
 
@@ -324,7 +353,7 @@
   </div>
   <script>
     (function () {
-      const navLinks = document.querySelectorAll('.header-nav a[href^="#"], .contattami-header[href^="#"]');
+      const navLinks = document.querySelectorAll('.header-nav a[href^="#"], .contattami-header[href^="#"], .metodo-cta-link[href^="#"]');
       const projectsSection = document.querySelector('#projects');
       const projectsExpandedContent = document.querySelector('#projects-expanded-content');
       const toggleProjectsExpandedButton = document.querySelector('#toggle-projects-expanded');
