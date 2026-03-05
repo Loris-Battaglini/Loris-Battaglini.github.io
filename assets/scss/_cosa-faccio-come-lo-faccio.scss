@@ -1,3 +1,4 @@
+// Metodo section: two tracks with real geometric connectors.
 .metodo-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -105,11 +106,12 @@
 .metodo-item p {
   margin: 0;
   width: 100%;
+  // Closed card style requested in current visual iteration.
   border-top: 1px solid var(--line);
   border-right: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
-  border-left: 0;
-  border-radius: 0 0.74rem 0.74rem 0;
+  border-left: 1px solid var(--line);
+  border-radius: 0.74rem 0.74rem 0.74rem 0.74rem;
   background: linear-gradient(180deg, #ffffff, var(--surface-strong));
   color: var(--muted);
   line-height: 1.58;
@@ -119,6 +121,7 @@
 
 .metodo-item:hover p {
   transform: translateY(-2px);
+  border-left-color: var(--track-soft);
   border-top-color: var(--track-soft);
   border-right-color: var(--track-soft);
   border-bottom-color: var(--track-soft);
@@ -161,6 +164,7 @@
 }
 
 @media (max-width: 992px) {
+  // On mobile, force all connector anchors to the same Y to avoid line drift.
   .metodo-grid {
     grid-template-columns: 1fr;
     gap: 1rem;
