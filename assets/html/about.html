@@ -48,11 +48,11 @@
     </header>
 
     <main class="about-story">
-      <section class="about-manifesto" aria-label="Manifesto personale">
-        <p>Credo nel costruire prima di parlare.</p>
+      <section class="about-manifesto" aria-label="Manifesto personale" data-reveal>
+        <p>Credo nel costruire prima di parlare</p>
       </section>
 
-      <section class="about-section about-vision-section" id="visione">
+      <section class="about-section about-vision-section" id="visione" data-reveal>
         <div class="about-vision-layout">
           <div class="about-copy-block about-vision-main">
             <p class="about-kicker">Dove sto andando</p>
@@ -86,7 +86,7 @@
         </div>
       </section>
 
-      <section class="about-section about-split-section about-section-mentality" id="mentalita">
+      <section class="about-section about-split-section about-section-mentality" id="mentalita" data-reveal>
         <figure class="about-before-after" data-before-after>
           <div class="about-before-after-media">
             <img src="../img/about-after.jpg" alt="Loris dopo la trasformazione fisica" class="about-photo-after">
@@ -106,7 +106,7 @@
         </figure>
 
         <div class="about-copy-block">
-          <p class="about-kicker">La mentalita</p>
+          <p class="about-kicker">La mentalità</p>
           <h2>Disciplina e continuita: il mio standard di lavoro.</h2>
           <p>
             In passato pesavo circa 130 kg. Con disciplina, allenamento e costanza ho portato
@@ -123,7 +123,7 @@
         </div>
       </section>
 
-      <section class="about-section about-contact-bridge about-closure" id="contatto">
+      <section class="about-section about-contact-bridge about-closure" id="contatto" data-reveal>
         <p class="about-kicker">Perche puoi fidarti</p>
         <h2>Perche lavoro con metodo, trasparenza e continuita.</h2>
         <p>
@@ -137,6 +137,9 @@
   <script>
     (function () {
       const navLinks = document.querySelectorAll('.header-nav a[href^="#"]');
+      const aboutShell = document.querySelector('.about-shell');
+      const revealTargets = document.querySelectorAll('[data-reveal]');
+      const manifestoText = document.querySelector('.about-manifesto p');
       let activeTimer = null;
       let activeSection = null;
 
@@ -188,6 +191,84 @@
         }, 1700);
       }
 
+      function playManifestoTyping() {
+        if (!manifestoText || manifestoText.dataset.typed === 'true') return;
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          manifestoText.dataset.typed = 'true';
+          return;
+        }
+
+        const fullText = manifestoText.textContent.trim();
+        if (!fullText) return;
+
+        const startDelay = 260;
+
+        manifestoText.classList.add('is-typing');
+        manifestoText.classList.add('manifesto-text-reveal');
+        manifestoText.textContent = '';
+
+        const charNodes = [];
+        fullText.split('').forEach(function (char) {
+          if (char === ' ') {
+            manifestoText.appendChild(document.createTextNode(' '));
+            return;
+          }
+
+          const charSpan = document.createElement('span');
+          charSpan.className = 'manifesto-char';
+          charSpan.textContent = char;
+          manifestoText.appendChild(charSpan);
+          charNodes.push(charSpan);
+        });
+
+        let totalDelay = startDelay;
+        charNodes.forEach(function (charNode) {
+          const charValue = charNode.textContent;
+          window.setTimeout(function () {
+            charNode.classList.add('is-visible');
+          }, totalDelay);
+          totalDelay += /[.,;:!?]/.test(charValue) ? 145 : 68;
+        });
+
+        const endDelay = totalDelay + 680;
+        window.setTimeout(function () {
+          manifestoText.classList.remove('is-typing');
+          manifestoText.dataset.typed = 'true';
+        }, endDelay);
+      }
+
+      function setupRevealOnScroll() {
+        if (!aboutShell || revealTargets.length === 0) return;
+
+        aboutShell.classList.add('reveal-ready');
+
+        if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          revealTargets.forEach(function (target) {
+            target.classList.add('is-visible');
+          });
+          playManifestoTyping();
+          return;
+        }
+
+        const observer = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add('is-visible');
+            if (entry.target.classList.contains('about-manifesto')) {
+              playManifestoTyping();
+            }
+            observer.unobserve(entry.target);
+          });
+        }, {
+          threshold: 0.22,
+          rootMargin: '0px 0px -8% 0px'
+        });
+
+        revealTargets.forEach(function (target) {
+          observer.observe(target);
+        });
+      }
+
       navLinks.forEach(function (link) {
         link.addEventListener('click', function (event) {
           const targetId = link.getAttribute('href');
@@ -203,6 +284,8 @@
           }, 460);
         });
       });
+
+      setupRevealOnScroll();
     })();
   </script>
 </body>

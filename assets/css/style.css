@@ -948,6 +948,8 @@ footer textarea:focus {
   box-shadow: none;
   padding: clamp(2.4rem, 7vw, 5rem) 0;
   text-align: center;
+  position: relative;
+  overflow: hidden;
 }
 
 .about-manifesto p {
@@ -957,6 +959,40 @@ footer textarea:focus {
   line-height: 1.18;
   letter-spacing: -0.02em;
   color: var(--text);
+  transition: letter-spacing 0.45s ease, text-shadow 0.45s ease, filter 0.45s ease;
+}
+
+.about-manifesto p.is-typing {
+  letter-spacing: 0.002em;
+  text-shadow: 0 0 20px rgba(47, 118, 210, 0.13);
+  filter: saturate(1.04);
+}
+
+.about-manifesto p.manifesto-text-reveal .manifesto-char {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.42em) scale(0.992);
+  filter: blur(4px);
+  transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1), transform 0.65s cubic-bezier(0.22, 1, 0.36, 1), filter 0.65s ease;
+}
+
+.about-manifesto p.manifesto-text-reveal .manifesto-char.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0);
+}
+
+.about-shell.reveal-ready [data-reveal] {
+  opacity: 0;
+  transform: translateY(30px) scale(0.985);
+  filter: blur(4px);
+  transition: opacity 0.75s ease, transform 0.75s cubic-bezier(0.22, 1, 0.36, 1), filter 0.75s ease;
+}
+
+.about-shell.reveal-ready [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+  filter: none;
 }
 
 .about-section {
@@ -1279,6 +1315,20 @@ footer textarea:focus {
   }
   .about-contact-link {
     justify-self: stretch;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .about-manifesto p.manifesto-text-reveal .manifesto-char {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    transition: none;
+  }
+  .about-shell.reveal-ready [data-reveal] {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    transition: none;
   }
 }
 :root {
