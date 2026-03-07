@@ -25,7 +25,7 @@
         </nav>
 
         <div class="header-cta-row">
-          <a href="../../index.html#projects" class="about-link-header">My Work</a>
+          <a href="../../index.html" class="about-link-header">Home</a>
           <a href="../../index.html#form" class="contattami-header">Contattami</a>
         </div>
       </div>
@@ -136,6 +136,10 @@
   </div>
   <script>
     (function () {
+      const navLinks = document.querySelectorAll('.header-nav a[href^="#"]');
+      let activeTimer = null;
+      let activeSection = null;
+
       const compareBlocks = document.querySelectorAll('[data-before-after]');
 
       compareBlocks.forEach(function (block) {
@@ -153,6 +157,51 @@
         });
 
         syncReveal(range.value || 50);
+      });
+
+      function scrollToCenter(element) {
+        const rect = element.getBoundingClientRect();
+        const sectionCenter = window.scrollY + rect.top + rect.height / 2;
+        const viewportCenter = window.innerHeight / 2;
+        const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+        const targetScroll = Math.min(maxScroll, Math.max(0, sectionCenter - viewportCenter));
+        window.scrollTo({ top: targetScroll, behavior: 'smooth' });
+      }
+
+      function highlightSection(targetId) {
+        const section = document.querySelector(targetId);
+        if (!section) return;
+
+        if (activeSection && activeSection !== section) {
+          activeSection.classList.remove('section-focus');
+        }
+
+        section.classList.remove('section-focus');
+        void section.offsetWidth;
+        section.classList.add('section-focus');
+        activeSection = section;
+
+        if (activeTimer) clearTimeout(activeTimer);
+        activeTimer = setTimeout(function () {
+          section.classList.remove('section-focus');
+          if (activeSection === section) activeSection = null;
+        }, 1700);
+      }
+
+      navLinks.forEach(function (link) {
+        link.addEventListener('click', function (event) {
+          const targetId = link.getAttribute('href');
+          if (!targetId || targetId === '#') return;
+          const targetSection = document.querySelector(targetId);
+          if (!targetSection) return;
+
+          event.preventDefault();
+          scrollToCenter(targetSection);
+
+          setTimeout(function () {
+            highlightSection(targetId);
+          }, 460);
+        });
       });
     })();
   </script>
