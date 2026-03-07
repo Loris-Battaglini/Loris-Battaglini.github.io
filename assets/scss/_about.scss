@@ -342,7 +342,8 @@
 }
 
 .about-closure {
-  max-width: 72ch;
+  max-width: 100%;
+  width: 100%;
 }
 
 .about-closure h2 {
@@ -396,6 +397,11 @@
   .about-copy-block h2 {
     max-width: 100%;
   }
+
+  .about-before-after {
+    width: min(100%, 300px);
+    margin-inline: auto;
+  }
 }
 
 @media (max-width: 640px) {
@@ -414,6 +420,15 @@
   .about-before-after-divider::after {
     width: 1.8rem;
     height: 1.8rem;
+  }
+
+  .about-before-after {
+    width: min(100%, 220px);
+    margin-inline: auto;
+  }
+
+  .about-before-after-media {
+    aspect-ratio: 3 / 4;
   }
 
   .about-contact-link {
