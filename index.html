@@ -338,7 +338,7 @@
         </p>
       </div>
 
-      <form action="#" method="post" id="form" data-emailjs-public-key="T2bpxcVtjxQ6zZcn9" data-emailjs-service-id="service_ic7rh6l" data-emailjs-template-id="template_lov96ss" data-emailjs-autoreply-template-id="template_deuf5cu" data-checklist-url="assets/html/guida-presenza-online.html" data-checklist-url-en="assets/html/guida-presenza-online-en.html" data-success-url="assets/html/form-success.html">
+      <form action="#" method="post" id="form" data-emailjs-public-key="T2bpxcVtjxQ6zZcn9" data-emailjs-service-id="service_ic7rh6l" data-emailjs-template-id="template_lov96ss" data-emailjs-autoreply-template-id="template_deuf5cu" data-emailjs-autoreply-template-id-en="" data-checklist-url="assets/html/guida-presenza-online.html" data-checklist-url-en="assets/html/guida-presenza-online-en.html" data-success-url="assets/html/form-success.html">
         <label for="text">
           <span data-i18n="formNameLabel">Nome</span>
           <input type="text" placeholder="Scrivi il tuo nome" id="text" name="nome-utente" autocomplete="name" minlength="2" required data-i18n-placeholder="formNamePlaceholder">
@@ -1118,12 +1118,17 @@
 
       function getEmailJsConfig(form) {
         const fallbackChecklistUrl = new URL('assets/files/checklist-placeholder.txt', window.location.href).href;
+        const checklistUrlIt = form.dataset.checklistUrl || fallbackChecklistUrl;
+        const checklistUrlEn = form.dataset.checklistUrlEn || checklistUrlIt;
         return {
           publicKey: form.dataset.emailjsPublicKey || '',
           serviceId: form.dataset.emailjsServiceId || '',
           templateId: form.dataset.emailjsTemplateId || '',
           autoReplyTemplateId: form.dataset.emailjsAutoreplyTemplateId || '',
-          checklistUrl: form.dataset.activeChecklistUrl || form.dataset.checklistUrl || fallbackChecklistUrl,
+          autoReplyTemplateIdEn: form.dataset.emailjsAutoreplyTemplateIdEn || '',
+          checklistUrl: form.dataset.activeChecklistUrl || checklistUrlIt,
+          checklistUrlIt: checklistUrlIt,
+          checklistUrlEn: checklistUrlEn,
           successUrl: form.dataset.successUrl || 'assets/html/form-success.html'
         };
       }
@@ -1134,13 +1139,18 @@
         const messageField = form.querySelector('#message');
         const checklistField = form.querySelector('#lead-magnet');
 
-        const wantsChecklist = checklistField && checklistField.checked ? 'Si' : 'No';
+        const checklistRequested = Boolean(checklistField && checklistField.checked);
+        const wantsChecklistLabel = currentLanguage === 'en'
+          ? (checklistRequested ? 'Yes' : 'No')
+          : (checklistRequested ? 'Si' : 'No');
 
         return {
           from_name: nameField ? nameField.value.trim() : '',
           reply_to: emailField ? emailField.value.trim() : '',
           message: messageField ? messageField.value.trim() : '',
-          wants_checklist: wantsChecklist,
+          wants_checklist: checklistRequested ? 'yes' : 'no',
+          wants_checklist_label: wantsChecklistLabel,
+          preferred_language: currentLanguage,
           to_name: nameField ? nameField.value.trim() : '',
           to_email: emailField ? emailField.value.trim() : ''
         };
@@ -1191,20 +1201,25 @@
 
           window.emailjs.init({ publicKey: config.publicKey });
           const templateParams = buildTemplateParams(contactForm);
-          templateParams.checklist_url = config.checklistUrl;
+          templateParams.checklist_url = new URL(config.checklistUrl, window.location.href).href;
+          templateParams.checklist_url_it = new URL(config.checklistUrlIt, window.location.href).href;
+          templateParams.checklist_url_en = new URL(config.checklistUrlEn, window.location.href).href;
 
           window.emailjs
             .send(config.serviceId, config.templateId, templateParams)
             .then(function () {
-              const checklistRequested = templateParams.wants_checklist === 'Si';
-              const autoReplyConfigured = config.autoReplyTemplateId && config.autoReplyTemplateId !== 'YOUR_EMAILJS_AUTOREPLY_TEMPLATE_ID';
+              const checklistRequested = templateParams.wants_checklist === 'yes';
+              const selectedAutoReplyTemplateId = templateParams.preferred_language === 'en'
+                ? (config.autoReplyTemplateIdEn || config.autoReplyTemplateId)
+                : config.autoReplyTemplateId;
+              const autoReplyConfigured = selectedAutoReplyTemplateId && selectedAutoReplyTemplateId !== 'YOUR_EMAILJS_AUTOREPLY_TEMPLATE_ID';
 
               if (!checklistRequested) return;
               if (!autoReplyConfigured) {
                 throw new Error('Template auto-reply non configurato');
               }
 
-              return window.emailjs.send(config.serviceId, config.autoReplyTemplateId, templateParams);
+              return window.emailjs.send(config.serviceId, selectedAutoReplyTemplateId, templateParams);
             })
             .then(function () {
               window.location.href = config.successUrl;
