@@ -5,6 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Messaggio inviato | Loris Battaglini</title>
   <meta name="description" content="Conferma di invio del form di contatto.">
+  <style>
+    html.theme-dark,
+    html.theme-dark body {
+      background: #070f1d;
+      color: #f2f7ff;
+    }
+  </style>
+  <script>
+    (function () {
+      try {
+        if (window.localStorage.getItem('lb-theme') === 'dark') {
+          document.documentElement.classList.add('theme-dark');
+        }
+      } catch (error) {
+        // Storage unavailable.
+      }
+    })();
+  </script>
   <link rel="icon" type="image/png" href="../img/favicon/favicon_io/favicon-32x32.png">
   <link rel="stylesheet" href="../css/style.css">
   <style>
@@ -57,6 +75,7 @@
   <script>
     (function () {
       const STORAGE_KEY = 'lb-language';
+      const THEME_KEY = 'lb-theme';
       const DEFAULT_LANGUAGE = 'it';
       const SUPPORTED_LANGUAGES = ['it', 'en'];
       const COPY = {
@@ -89,6 +108,20 @@
         }
       }
 
+      function getTheme() {
+        try {
+          return localStorage.getItem(THEME_KEY) === 'dark' ? 'dark' : 'light';
+        } catch (error) {
+          return 'light';
+        }
+      }
+
+      function applyTheme(theme) {
+        const isDarkTheme = theme === 'dark';
+        document.documentElement.classList.toggle('theme-dark', isDarkTheme);
+        document.body.classList.toggle('theme-dark', isDarkTheme);
+      }
+
       function applyLanguage(language) {
         const copy = COPY[language] || COPY.it;
         document.documentElement.lang = language;
@@ -107,6 +140,7 @@
         });
       }
 
+      applyTheme(getTheme());
       applyLanguage(getLanguage());
     })();
   </script>

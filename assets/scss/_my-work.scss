@@ -10,6 +10,7 @@
   border-radius: 1rem;
   overflow: hidden;
   background: var(--card-bg);
+  color: var(--text);
   box-shadow: none;
   transition: transform 0.26s ease, box-shadow 0.26s ease, border-color 0.26s ease;
 }
@@ -37,10 +38,13 @@
 .project-card .card-title {
   font-size: 1.1rem;
   margin: 0;
+  color: var(--text);
+  font-weight: 700;
 }
 
 .project-card .card-text {
   color: var(--muted);
+  font-weight: 500;
   line-height: 1.6;
   margin: 0;
 }
@@ -243,6 +247,13 @@
   line-height: 1;
   letter-spacing: 0.02em;
   white-space: nowrap;
+}
+
+body.theme-dark .project-status,
+html.theme-dark body .project-status {
+  color: #ffd8c2;
+  background: rgba(255, 183, 143, 0.2);
+  border-color: rgba(255, 183, 143, 0.62);
 }
 
 .project-card[data-project-state="soon"] {
