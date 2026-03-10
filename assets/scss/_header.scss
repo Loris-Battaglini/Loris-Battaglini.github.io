@@ -72,25 +72,43 @@ header::after {
 .language-switch {
   display: inline-flex;
   align-items: center;
-  gap: 0.18rem;
-  padding: 0.2rem;
+  gap: 0.48rem;
+  padding: 0.2rem 0.24rem 0.2rem 0.45rem;
   border-radius: 999px;
   border: 1px solid var(--line-strong);
   background: var(--control-bg);
+  overflow: hidden;
 }
 
 .language-switch i {
   color: var(--muted);
-  font-size: 0.92rem;
-  padding-inline: 0.38rem 0.22rem;
+  font-size: 0.9rem;
+  inline-size: 1rem;
+  block-size: 1rem;
+  display: grid;
+  place-items: center;
+  flex: 0 0 1rem;
+}
+
+.language-switch > div {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.18rem;
+  padding: 0.15rem;
+  border-radius: 999px;
+  flex: 0 0 auto;
+  min-width: max-content;
 }
 
 .language-option {
   border: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background: transparent;
   color: var(--muted);
   min-height: 1.85rem;
-  min-width: 2.2rem;
+  min-width: 2.26rem;
   border-radius: 999px;
   padding: 0.2rem 0.56rem;
   font-size: 0.78rem;
@@ -112,6 +130,7 @@ header::after {
 .language-option.is-active {
   color: #fff;
   background: linear-gradient(120deg, var(--accent), var(--accent-2));
+  box-shadow: 0 6px 14px rgba(47, 118, 210, 0.24);
 }
 
 .header-nav {
