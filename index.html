@@ -1193,6 +1193,7 @@
           navigateTimeoutId: 0
         };
         const itemCount = radialMenuItems.length;
+        const dragStepThreshold = 34;
 
         function isPhoneViewport() {
           return window.matchMedia(PHONE_MEDIA_QUERY).matches;
@@ -1301,7 +1302,6 @@
 
         radialMenuShell.addEventListener('pointerdown', function (event) {
           if (!radialState.isOpen) return;
-          if (event.target && event.target.closest('[data-radial-item]')) return;
           radialState.isDragging = true;
           radialState.pointerId = event.pointerId;
           radialState.dragStartY = event.clientY;
@@ -1316,7 +1316,7 @@
           if (Math.abs(deltaY) > 6) {
             radialState.suppressBackgroundTap = true;
           }
-          if (radialState.hasSteppedInDrag || Math.abs(deltaY) < 40) return;
+          if (radialState.hasSteppedInDrag || Math.abs(deltaY) < dragStepThreshold) return;
           const direction = deltaY > 0 ? -1 : 1;
           radialState.hasSteppedInDrag = stepWheel(direction);
         });
@@ -1349,12 +1349,12 @@
         });
 
         radialMenuItems.forEach(function (item, index) {
-          item.addEventListener('pointerdown', function (event) {
-            event.stopPropagation();
-          });
-
           item.addEventListener('click', function (event) {
             event.preventDefault();
+            if (radialState.suppressBackgroundTap) {
+              radialState.suppressBackgroundTap = false;
+              return;
+            }
             radialState.activeIndex = index;
             radialState.inputLockUntil = performance.now() + 560;
             renderWheel();
