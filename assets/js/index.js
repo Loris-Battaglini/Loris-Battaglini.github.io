@@ -1,411 +1,4 @@
-﻿<!DOCTYPE html>
-<html lang="it">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Loris Battaglini | Full-Stack Web Developer</title>
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/img/favicon/favicon_io/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon/favicon_io/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon/favicon_io/favicon-16x16.png">
-  <link rel="icon" href="assets/img/favicon/favicon_io/favicon.ico">
-  <link rel="manifest" href="assets/img/favicon/favicon_io/site.webmanifest">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Sora:wght@700&display=swap" rel="stylesheet">
-  <style>
-    html.theme-dark,
-    html.theme-dark body {
-      background: #070f1d;
-      color: #f2f7ff;
-    }
-  </style>
-  <script src="assets/js/theme-preload.js"></script>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-  <link rel="stylesheet" href="assets/css/style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
-</head>
-<body class="has-radial-menu">
-  <canvas id="universe-canvas" class="universe-canvas" aria-hidden="true"></canvas>
-  <button
-    type="button"
-    class="radial-menu-toggle"
-    id="radial-menu-toggle"
-    aria-expanded="false"
-    aria-controls="radial-menu-panel"
-    aria-label="Apri menu orbitale"
-    data-i18n-aria-label="radialMenuToggleAriaLabel"
-  >
-    <span aria-hidden="true"></span>
-    <span aria-hidden="true"></span>
-    <span aria-hidden="true"></span>
-  </button>
-
-  <div class="radial-menu-panel" id="radial-menu-panel" aria-hidden="true">
-    <button type="button" class="radial-menu-overlay" data-radial-close aria-label="Chiudi menu" data-i18n-aria-label="radialMenuCloseAriaLabel"></button>
-    <div class="radial-menu-shell" id="radial-menu-shell" role="dialog" aria-modal="true" tabindex="-1" aria-label="Navigazione orbitale" data-i18n-aria-label="radialMenuDialogAriaLabel">
-      <div class="radial-menu-orbit" id="radial-menu-orbit">
-        <a href="#top" class="radial-menu-item is-active" data-radial-item data-i18n="radialMenuHome">Home</a>
-        <a href="assets/html/about.html" class="radial-menu-item" data-radial-item data-i18n="radialMenuAbout">About Me</a>
-        <a href="#form" class="radial-menu-item" data-radial-item data-i18n="radialMenuContacts">Contatti</a>
-      </div>
-    </div>
-  </div>
-
-  <div class="site-shell">
-    <header id="top">
-      <div class="header-nav-row">
-        <a href="#top" class="brand-mark" data-i18n="brandMark">Loris Battaglini</a>
-
-        <div class="header-tools" aria-label="Strumenti header" data-i18n-aria-label="headerToolsAriaLabel">
-          <button type="button" class="header-icon-btn" id="theme-toggle" aria-label="Attiva modalità scura" data-i18n-aria-label="themeToggleAriaLabel">
-            <i class="fa-solid fa-moon" aria-hidden="true"></i>
-          </button>
-          <div class="language-switch" role="group" aria-label="Selettore lingua" data-i18n-aria-label="languageSwitchAriaLabel">
-            <i class="fa-solid fa-language" aria-hidden="true"></i>
-            <div>
-            <button type="button" class="language-option is-active" data-language-option data-lang="it" aria-pressed="true">IT</button>
-            <button type="button" class="language-option" data-language-option data-lang="en" aria-pressed="false">EN</button>
-            </div>
-          </div>
-        </div>
-
-        <nav class="header-nav" aria-label="Menu principale">
-          <ul>
-            <li><a href="#skills" data-i18n="navSkills">Skills</a></li>
-            <li><a href="#metodo" data-i18n="navMethod">Metodo</a></li>
-            <li><a href="#projects" data-i18n="navWork">I miei progetti</a></li>
-          </ul>
-        </nav>
-
-        <div class="header-cta-row">
-          <a href="assets/html/about.html" class="about-link-header" data-i18n="headerAboutLink">About me</a>
-          <a href="#form" class="contattami-header" data-i18n="headerContactLink">Contattami</a>
-        </div>
-      </div>
-
-      <div class="header-main-row">
-        <section class="left-container-header">
-          <div class="text-container-header">
-            <h1 data-i18n="heroTitle">Ciao, mi chiamo Loris Battaglini</h1>
-            <h4 data-i18n="heroSubtitle">In formazione come</h4>
-            <h2 data-i18n="heroRole">Full-Stack Web Developer</h2>
-            <p data-i18n="heroParagraph">
-              Progetto e sviluppo siti web chiari, veloci e orientati al risultato.
-              Ogni sezione viene costruita per valorizzare il tuo lavoro e guidare
-              l'utente verso il contatto.
-            </p>
-          </div>
-
-          <ul class="link-container-header">
-            <li>
-              <a href="#" class="btn-cv" data-i18n="downloadCvButton">Scarica Curriculum</a>
-            </li>
-            <li class="btn-linkedin">
-              <a href="http://www.linkedin.com/in/loris-battaglini-web" target="_blank" rel="noopener noreferrer" aria-label="Apri profilo LinkedIn" data-i18n-aria-label="openLinkedinAriaLabel">
-                <img src="assets/img/linkedin/LI-In-Bug.png" alt="LinkedIn">
-              </a>
-            </li>
-            <li class="btn-instagram">
-              <a href="https://www.instagram.com/loris_battaglini/" target="_blank" rel="noopener noreferrer" aria-label="Apri profilo Instagram" data-i18n-aria-label="openInstagramAriaLabel">
-                <img src="assets/img/logo-instagram/01 Gradient Glyph/Instagram_Glyph_Gradient.png" alt="Instagram">
-              </a>
-            </li>
-          </ul>
-
-          <ul class="info-container-header">
-            <li><i class="fa-solid fa-location-dot"></i><span data-i18n="heroInfoLocation">Caprarola, Italia</span></li>
-            <li><i class="fa-regular fa-address-card"></i><span data-i18n="heroInfoAge">24 anni</span></li>
-            <li><i class="fa-solid fa-bolt"></i><span data-i18n="heroInfoTagline">Siti moderni e su misura</span></li>
-          </ul>
-        </section>
-
-        <section class="right-container-header">
-          <div class="img-container-header">
-            <img class="foto-loris" src="assets/img/20251005_001626.jpg" alt="Foto profilo di Loris Battaglini">
-          </div>
-        </section>
-      </div>
-    </header>
-
-    <section class="skill-container" id="skills">
-      <div class="section-heading">
-        <h3 data-i18n="skillsHeading">Competenze principali</h3>
-        <p data-i18n="skillsIntro">Tecnologie selezionate per costruire prodotti affidabili, aggiornabili e performanti.</p>
-      </div>
-
-      <div class="skill-grid">
-        <article class="skill-inside-container">
-          <h4>HTML</h4>
-          <p data-i18n="skillHtmlText">Struttura semantica e accessibile.</p>
-        </article>
-        <article class="skill-inside-container">
-          <h4>CSS / SCSS</h4>
-          <p data-i18n="skillCssText">Layout responsive e UI professionali.</p>
-        </article>
-        <article class="skill-inside-container">
-          <h4>Git / GitHub</h4>
-          <p data-i18n="skillGitText">Versionamento pulito e workflow ordinato.</p>
-        </article> 
-      </div>
-
-      <details class="learning-dropdown" id="learning-skills">
-        <summary data-i18n="learningSummary">Competenze che sto studiando</summary>
-        <p class="learning-intro" data-i18n="learningIntro">Le sto approfondendo con progetti pratici, quindi le tengo separate dalle competenze principali.</p>
-
-        <div class="learning-skill-grid">
-          <article class="skill-inside-container learning-item">
-            <h4>JavaScript</h4>
-            <p data-i18n="learningJavascriptText">Logica e interattività lato client.</p>
-          </article>
-          <article class="skill-inside-container learning-item">
-            <h4>TypeScript</h4>
-            <p data-i18n="learningTypescriptText">Tipizzazione per codice più robusto.</p>
-          </article>
-          <article class="skill-inside-container learning-item">
-            <h4>React</h4>
-            <p data-i18n="learningReactText">Componenti riusabili per interfacce moderne.</p>
-          </article>
-          <article class="skill-inside-container learning-item">
-            <h4>Node.js</h4>
-            <p data-i18n="learningNodeText">Basi backend e gestione API.</p>
-          </article>
-          <article class="skill-inside-container learning-item">
-            <h4>Agenti AI</h4>
-            <p data-i18n="learningAiText">Workflow assistiti per produttività e automazione.</p>
-          </article>
-        </div>
-      </details>
-    </section>
-
-    <section class="metodo-section" id="metodo">
-      <div class="section-heading">
-        <h3 data-i18n="methodHeading">Come trasformo un'idea in un sito che funziona</h3>
-        <p data-i18n="methodIntro">Ogni progetto nasce da un obiettivo chiaro e viene costruito con un metodo preciso</p>
-      </div>
-
-      <div class="metodo-grid">
-        <article class="metodo-track metodo-track-value">
-          <h3 data-i18n="methodResultTitle">Risultato</h3>
-          <ul class="metodo-timeline">
-            <li class="metodo-item">
-              <p data-i18n="methodResultItem1">Trasformo la tua idea in un sito professionale orientato agli obiettivi.</p>
-              <span class="metodo-point" aria-hidden="true"></span>
-            </li>
-            <li class="metodo-item">
-              <p data-i18n="methodResultItem2">Organizzo i contenuti in sezioni che fanno percepire subito il valore dei tuoi servizi.</p>
-              <span class="metodo-point" aria-hidden="true"></span>
-            </li>
-            <li class="metodo-item">
-              <p data-i18n="methodResultItem3">Costruisco pagine che guidano il visitatore verso la richiesta di contatto.</p>
-              <span class="metodo-point" aria-hidden="true"></span>
-            </li>
-            <li class="metodo-item">
-              <p data-i18n="methodResultItem4">Ti consegno una base solida pronta a crescere con il tuo progetto.</p>
-              <span class="metodo-point" aria-hidden="true"></span>
-            </li>
-          </ul>
-        </article>
-
-        <article class="metodo-track metodo-track-process">
-          <h3 data-i18n="methodProcessTitle">Metodo</h3>
-          <ul class="metodo-timeline">
-            <li class="metodo-item">
-              <p data-i18n="methodProcessItem1">Definisco obiettivi, target, messaggio e tono prima di scrivere il codice.</p>
-              <span class="metodo-point" aria-hidden="true"></span>
-            </li>
-            <li class="metodo-item">
-              <p data-i18n="methodProcessItem2">Disegno struttura e gerarchia visiva per guidare attenzione, comprensione e decisione.</p>
-              <span class="metodo-point" aria-hidden="true"></span>
-            </li>
-            <li class="metodo-item">
-              <p data-i18n="methodProcessItem3">Sviluppo in modo modulare e responsive, con codice semplice da mantenere e ampliare nel tempo.</p>
-              <span class="metodo-point" aria-hidden="true"></span>
-            </li>
-            <li class="metodo-item">
-              <p data-i18n="methodProcessItem4">Eseguo ottimizzazioni finali su performance, leggibilità e UX prima della consegna.</p>
-              <span class="metodo-point" aria-hidden="true"></span>
-            </li>
-          </ul>
-        </article>
-      </div>
-
-      <div class="metodo-cta">
-        <p data-i18n="methodCtaText">Hai un progetto in mente? Scrivimi qui sotto e raccontami la tua idea.
-        </p>
-        <a href="#form" class="metodo-cta-link" data-i18n="methodCtaButton">Parliamo del tuo progetto</a>
-      </div>
-    </section>
-
-    <section class="progetti-card" id="projects">
-      <div class="section-heading">
-        <h3 data-i18n="projectsHeading">I miei progetti</h3>
-        <p data-i18n="projectsIntro">Una selezione essenziale dei miei lavori principali. Se vuoi espanderla clicca il pulsante "Vedi tutti i progetti"</p>
-      </div>
-
-      <div class="projects-grid projects-grid-static">
-        <article class="card project-card card-left" data-project-state="live">
-          <img src="assets/img/siti/depyl-card.jpg" class="card-img-top" alt="Anteprima progetto Depyl" data-i18n-alt="projectDepylAlt">
-          <div class="card-body">
-            <h5 class="card-title" data-i18n="projectDepylTitle">Progetto Depyl</h5>
-            <p class="card-text" data-i18n="projectDepylText">Landing informativa per Depyl con focus su problema, soluzione e vantaggi in una struttura chiara orientata al contatto.</p>
-            <a href="https://lorispc11052001-stack.github.io/depyl-per-portfolio/" class="btn btn-primary" target="_blank" rel="noopener noreferrer" data-i18n="projectVisitButton">Visita il sito</a>
-          </div>
-        </article>
-
-        <article class="card project-card card-right" data-project-state="live">
-          <img src="assets/img/siti/coffe-studio-card.jpg" class="card-img-top" alt="Anteprima progetto Coffee Studio" data-i18n-alt="projectCoffeeAlt">
-          <div class="card-body">
-            <h5 class="card-title" data-i18n="projectCoffeeTitle">Landing Prodotto</h5>
-            <p class="card-text" data-i18n="projectCoffeeText">Sito vetrina per una caffetteria specialty con identità visiva curata, menu in evidenza e call to action verso prenotazione e contatto.</p>
-            <a href="https://lorispc11052001-stack.github.io/Coffe-Studio/" class="btn btn-primary" target="_blank" rel="noopener noreferrer" data-i18n="projectVisitButton">Visita il sito</a>
-          </div>
-        </article>
-      </div>
-
-      <div class="projects-expand-row">
-        <button type="button" class="projects-more-link" id="toggle-projects-expanded" aria-expanded="false" aria-controls="projects-expanded-content">
-          <span data-i18n="projectsShowAllButton">Vedi tutti i progetti</span>
-        </button>
-      </div>
-
-      <div class="projects-expanded-content" id="projects-expanded-content" hidden>
-        <article class="projects-slider-block">
-          <h4 class="progetti-completati-lavorazione" data-i18n="completedProjectsHeading">Progetti completati</h4>
-          <div class="projects-slider-controls" role="group" aria-label="Controlli progetti completati" data-i18n-aria-label="completedControlsAriaLabel">
-            <button type="button" class="projects-nav-btn" data-action="prev" aria-label="Scorri a sinistra" data-i18n-aria-label="sliderPrevAriaLabel">&larr;</button>
-            <button type="button" class="projects-nav-btn projects-nav-toggle" data-action="toggle" aria-pressed="false" data-i18n="sliderPauseButton">Blocca Scorrimento</button>
-            <button type="button" class="projects-nav-btn" data-action="next" aria-label="Scorri a destra" data-i18n-aria-label="sliderNextAriaLabel">&rarr;</button>
-          </div>
-          <div class="projects-slider" aria-label="Carosello progetti completati" data-i18n-aria-label="completedCarouselAriaLabel">
-            <div class="projects-track">
-              <div class="projects-lane">
-                <article class="card project-card" data-project-state="live">
-                  <img src="assets/img/siti/depyl-card.jpg" class="card-img-top" alt="Anteprima progetto Depyl" data-i18n-alt="projectDepylAlt">
-                  <div class="card-body">
-                    <h5 class="card-title" data-i18n="projectDepylTitle">Progetto Depyl</h5>
-                    <p class="card-text" data-i18n="projectDepylText">Landing informativa per Depyl con focus su problema, soluzione e vantaggi in una struttura chiara orientata al contatto.</p>
-                    <a href="https://lorispc11052001-stack.github.io/depyl-per-portfolio/" class="btn btn-primary" target="_blank" rel="noopener noreferrer" data-i18n="projectVisitButton">Visita il sito</a>
-                  </div>
-                </article>
-
-                <article class="card project-card" data-project-state="live">
-                  <img src="assets/img/siti/coffe-studio-card.jpg" class="card-img-top" alt="Anteprima progetto Coffee Studio" data-i18n-alt="projectCoffeeAlt">
-                  <div class="card-body">
-                    <h5 class="card-title" data-i18n="projectCoffeeTitle">Landing Prodotto</h5>
-                    <p class="card-text" data-i18n="projectCoffeeText">Sito vetrina per una caffetteria specialty con identità visiva curata, menu in evidenza e call to action verso prenotazione e contatto.</p>
-                    <a href="https://lorispc11052001-stack.github.io/Coffe-Studio/" class="btn btn-primary" target="_blank" rel="noopener noreferrer" data-i18n="projectVisitButton">Visita il sito</a>
-                  </div>
-                </article>
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <article class="projects-slider-block projects-slider-block-working">
-          <h4 class="progetti-completati-lavorazione" data-i18n="workingProjectsHeading">Progetti in lavorazione</h4>
-          <div class="projects-slider-controls" role="group" aria-label="Controlli progetti in lavorazione" data-i18n-aria-label="workingControlsAriaLabel">
-            <button type="button" class="projects-nav-btn" data-action="prev" aria-label="Scorri a sinistra" data-i18n-aria-label="sliderPrevAriaLabel">&larr;</button>
-            <button type="button" class="projects-nav-btn projects-nav-toggle" data-action="toggle" aria-pressed="false" data-i18n="sliderPauseButton">Blocca Scorrimento</button>
-            <button type="button" class="projects-nav-btn" data-action="next" aria-label="Scorri a destra" data-i18n-aria-label="sliderNextAriaLabel">&rarr;</button>
-          </div>
-          <div class="projects-slider projects-slider-soon" aria-label="Carosello progetti in lavorazione" data-i18n-aria-label="workingCarouselAriaLabel">
-            <div class="projects-track">
-              <div class="projects-lane">
-                <article class="card project-card" data-project-state="soon">
-                  <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=900&auto=format&fit=crop&q=80" class="card-img-top" alt="Anteprima progetto E-commerce Artigiano" data-i18n-alt="projectCraftEcommerceAlt">
-                  <div class="card-body">
-                    <span class="project-status" data-i18n="comingSoonBadge">Coming soon</span>
-                    <h5 class="card-title" data-i18n="projectCraftEcommerceTitle">E-commerce Artigiano</h5>
-                    <p class="card-text" data-i18n="projectCraftEcommerceText">Store essenziale pensato per prodotti locali e checkout semplificato.</p>
-                    <button type="button" class="btn btn-primary disabled-project-link" disabled data-i18n="inProgressButton">In lavorazione</button>
-                  </div>
-                </article>
-
-                <article class="card project-card" data-project-state="soon">
-                  <img src="https://images.unsplash.com/photo-1523205771623-e0faa4d2813d?w=900&auto=format&fit=crop&q=80" class="card-img-top" alt="Anteprima progetto Portfolio Foto" data-i18n-alt="projectPhotoPortfolioAlt">
-                  <div class="card-body">
-                    <span class="project-status" data-i18n="comingSoonBadge">Coming soon</span>
-                    <h5 class="card-title" data-i18n="projectPhotoPortfolioTitle">Portfolio Foto</h5>
-                    <p class="card-text" data-i18n="projectPhotoPortfolioText">Esperienza immersiva per fotografi con galleria ad alto impatto visivo.</p>
-                    <button type="button" class="btn btn-primary disabled-project-link" disabled data-i18n="inProgressButton">In lavorazione</button>
-                  </div>
-                </article>
-
-                <article class="card project-card" data-project-state="live">
-                  <img src="https://images.unsplash.com/photo-1509395176047-4a66953fd231?w=900&auto=format&fit=crop&q=80" class="card-img-top" alt="Anteprima progetto Dashboard SEO" data-i18n-alt="projectSeoDashboardAlt">
-                  <div class="card-body">
-                    <span class="project-status" data-i18n="comingSoonBadge">Coming soon</span>
-                    <h5 class="card-title" data-i18n="projectSeoDashboardTitle">Dashboard SEO</h5>
-                    <p class="card-text" data-i18n="projectSeoDashboardText">Report automatici e panoramica metriche per monitorare performance mensili.</p>
-                    <button type="button" class="btn btn-primary disabled-project-link" disabled data-i18n="inProgressButton">In lavorazione</button>
-                  </div>
-                </article>
-
-                <article class="card project-card" data-project-state="live">
-                  <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=900&auto=format&fit=crop&q=80" class="card-img-top" alt="Anteprima progetto Landing Restaurant" data-i18n-alt="projectRestaurantAlt">
-                  <div class="card-body">
-                    <span class="project-status" data-i18n="comingSoonBadge">Coming soon</span>
-                    <h5 class="card-title" data-i18n="projectRestaurantTitle">Landing Restaurant</h5>
-                    <p class="card-text" data-i18n="projectRestaurantText">Sito vetrina ad alto impatto per prenotazioni rapide e menu in evidenza.</p>
-                    <button type="button" class="btn btn-primary disabled-project-link" disabled data-i18n="inProgressButton">In lavorazione</button>
-                  </div>
-                </article>
-
-              </div>
-            </div>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <footer>
-      <div class="section-heading">
-        <h3 data-i18n="contactHeading">Raccontami il tuo progetto</h3>
-        <p data-i18n="contactIntro">Scrivimi qui sotto e spiegami cosa vuoi costruire. Ti rispondo entro 24 ore. <br>Se preferisci, possiamo anche parlarne in una breve call.</p>
-      </div>
-
-      <div class="footer-lead-magnet" aria-label="Regalo di benvenuto">
-        <h4 data-i18n="leadMagnetHeading">Checklist gratuita</h4>
-        <p data-i18n="leadMagnetText">
-          Riceverai anche una guida utile:
-          <strong>"Prima presenza online credibile (anche se parti da zero)"</strong>
-        </p>
-      </div>
-
-      <form action="#" method="post" id="form" data-emailjs-public-key="T2bpxcVtjxQ6zZcn9" data-emailjs-service-id="service_ic7rh6l" data-emailjs-template-id="template_lov96ss" data-emailjs-autoreply-template-id="template_deuf5cu" data-emailjs-autoreply-template-id-en="" data-checklist-url="https://lorispc11052001-stack.github.io/portfolio-personale/assets/html/guida-presenza-online.html" data-checklist-url-en="https://lorispc11052001-stack.github.io/portfolio-personale/assets/html/guida-presenza-online-en.html" data-success-url="assets/html/form-success.html">
-        <label for="text">
-          <span data-i18n="formNameLabel">Nome</span>
-          <input type="text" placeholder="Scrivi il tuo nome" id="text" name="nome-utente" autocomplete="name" minlength="2" required data-i18n-placeholder="formNamePlaceholder">
-        </label>
-
-        <label for="email">
-          <span data-i18n="formEmailLabel">Email</span>
-          <input type="email" id="email" placeholder="Inserisci la tua email" name="email-utente" autocomplete="email" required data-i18n-placeholder="formEmailPlaceholder">
-        </label>
-
-        <label for="message">
-          <span data-i18n="formMessageLabel">Messaggio</span>
-          <textarea name="messaggio" id="message" rows="6" placeholder="Descrivi il tuo progetto, la tua idea o cosa vorresti migliorare" minlength="15" required data-i18n-placeholder="formMessagePlaceholder"></textarea>
-        </label>
-
-        <label for="lead-magnet" class="lead-magnet-consent">
-          <input type="checkbox" id="lead-magnet" name="lead-magnet" value="mini-guida">
-          <span data-i18n="formChecklistConsent">Sì, voglio ricevere anche la checklist gratuita via email.</span>
-        </label>
-
-        <label for="website" class="form-honeypot" aria-hidden="true">
-          <span data-i18n="formHoneypotLabel">Non compilare questo campo</span>
-          <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
-        </label>
-
-        <button type="submit" class="btn-footer" id="form-submit-button" data-i18n="formSubmitButton">Invia il messaggio</button>
-        <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
-      </form>
-    </footer>
-  </div>
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-  <script>
-    (function () {
+﻿(function () {
       const STORAGE_KEYS = {
         theme: 'lb-theme',
         language: 'lb-language'
@@ -565,11 +158,24 @@
       const reducedMotionQuery = typeof window.matchMedia === 'function'
         ? window.matchMedia('(prefers-reduced-motion: reduce)')
         : null;
+      const phoneViewportQuery = typeof window.matchMedia === 'function'
+        ? window.matchMedia(PHONE_MEDIA_QUERY)
+        : null;
+      const sliderViewportQuery = typeof window.matchMedia === 'function'
+        ? window.matchMedia('(max-width: 992px)')
+        : null;
       const projectSliderStates = [];
+      let projectViewportObserver = null;
+      let isProjectsInViewport = true;
       let activeTimer = null;
       let activeSection = null;
+      let sectionHighlightFrameId = 0;
+      let pendingSectionHighlightTimeoutId = 0;
+      let focusHashScrollTimeoutId = 0;
+      let focusHashHighlightTimeoutId = 0;
       let projectAnimationFrameId = null;
       let projectAnimationLastTime = 0;
+      let projectResizeFrameId = 0;
       let currentLanguage = DEFAULT_LANGUAGE;
       let isFormSubmitting = false;
 
@@ -584,13 +190,26 @@
         rafId: 0,
         isRunning: false,
         lastTime: 0,
-        themeMode: 'light'
+        themeMode: 'light',
+        qualityLevel: 1,
+        averageFrameMs: 16.667,
+        lastQualityAdjustTime: 0
+      };
+      const UNIVERSE_QUALITY_CONFIG = {
+        lowThresholdMs: 19.8,
+        highThresholdMs: 15.8,
+        adjustCooldownMs: 700,
+        downStep: 0.06,
+        upStep: 0.03,
+        minQualityLight: 0.62,
+        minQualityDark: 0.74,
+        maxQuality: 1
       };
       const universeThemeProfiles = {
         light: {
-          particleArea: 28600,
-          minParticles: 26,
-          maxParticles: 72,
+          particleArea: 40800,
+          minParticles: 18,
+          maxParticles: 50,
           largeStarChance: 0.15,
           largeRadiusMin: 1.6,
           largeRadiusMax: 2.95,
@@ -625,9 +244,9 @@
           ]
         },
         dark: {
-          particleArea: 23200,
-          minParticles: 34,
-          maxParticles: 96,
+          particleArea: 33200,
+          minParticles: 24,
+          maxParticles: 67,
           largeStarChance: 0.22,
           largeRadiusMin: 1.95,
           largeRadiusMax: 3.45,
@@ -869,10 +488,53 @@
         return universeThemeProfiles[universeState.themeMode] || universeThemeProfiles.light;
       }
 
+      function getUniverseQualityBounds() {
+        return {
+          min: universeState.themeMode === 'dark'
+            ? UNIVERSE_QUALITY_CONFIG.minQualityDark
+            : UNIVERSE_QUALITY_CONFIG.minQualityLight,
+          max: UNIVERSE_QUALITY_CONFIG.maxQuality
+        };
+      }
+
+      function resetUniverseAdaptiveQuality() {
+        universeState.qualityLevel = UNIVERSE_QUALITY_CONFIG.maxQuality;
+        universeState.averageFrameMs = 16.667;
+        universeState.lastQualityAdjustTime = performance.now();
+      }
+
+      function updateUniverseAdaptiveQuality(deltaMs, timestamp) {
+        universeState.averageFrameMs += (deltaMs - universeState.averageFrameMs) * 0.14;
+        if (timestamp - universeState.lastQualityAdjustTime < UNIVERSE_QUALITY_CONFIG.adjustCooldownMs) {
+          return;
+        }
+
+        const bounds = getUniverseQualityBounds();
+        let nextQuality = universeState.qualityLevel;
+
+        if (universeState.averageFrameMs > UNIVERSE_QUALITY_CONFIG.lowThresholdMs) {
+          nextQuality -= UNIVERSE_QUALITY_CONFIG.downStep;
+        } else if (universeState.averageFrameMs < UNIVERSE_QUALITY_CONFIG.highThresholdMs) {
+          nextQuality += UNIVERSE_QUALITY_CONFIG.upStep;
+        }
+
+        nextQuality = clampValue(nextQuality, bounds.min, bounds.max);
+        universeState.lastQualityAdjustTime = timestamp;
+        if (Math.abs(nextQuality - universeState.qualityLevel) < 0.009) return;
+
+        universeState.qualityLevel = nextQuality;
+        if (universeState.width > 0 && universeState.height > 0) {
+          ensureUniverseParticleCount(universeState.width, universeState.height);
+        }
+      }
+
       function getUniverseTargetParticleCount(width, height) {
         const profile = getUniverseProfile();
-        const countByArea = Math.round((width * height) / profile.particleArea);
-        return clampValue(countByArea, profile.minParticles, profile.maxParticles);
+        const quality = clampValue(universeState.qualityLevel, 0.55, 1);
+        const countByArea = Math.round(((width * height) / profile.particleArea) * quality);
+        const minParticles = Math.max(8, Math.round(profile.minParticles * quality));
+        const maxParticles = Math.max(minParticles + 4, Math.round(profile.maxParticles * quality));
+        return clampValue(countByArea, minParticles, maxParticles);
       }
 
       function createUniverseParticle(width, height) {
@@ -896,6 +558,10 @@
           minRadius: Math.max(0.4, baseRadius * randomBetween(0.4, 0.58)),
           mass: Math.max(0.8, baseRadius * baseRadius),
           color: color,
+          glowColorInner: toRgba(color, profile.glowCoreAlpha),
+          glowColorMid: toRgba(color, profile.glowMidAlpha),
+          glowColorOuter: toRgba(color, 0),
+          fillColor: toRgba(color, profile.fillAlpha),
           burstCooldownMs: 0,
           twinklePhase: randomBetween(0, Math.PI * 2),
           twinkleSpeed: randomBetween(0.35, 1.08),
@@ -942,7 +608,11 @@
 
       function spawnUniverseFragments(x, y, impactStrength, colorA, colorB) {
         const profile = getUniverseProfile();
-        const fragmentCount = Math.round(randomBetween(profile.fragmentMinCount, profile.fragmentMaxCount) + impactStrength * 1.7);
+        const quality = clampValue(universeState.qualityLevel, 0.55, 1);
+        const fragmentCount = Math.max(
+          1,
+          Math.round((randomBetween(profile.fragmentMinCount, profile.fragmentMaxCount) + impactStrength * 1.7) * quality)
+        );
         for (let index = 0; index < fragmentCount; index += 1) {
           const angle = randomBetween(0, Math.PI * 2);
           const speed = randomBetween(0.28, 1.22) * (0.64 + impactStrength);
@@ -966,8 +636,9 @@
           });
         }
 
-        if (universeState.fragments.length > 180) {
-          universeState.fragments.splice(0, universeState.fragments.length - 180);
+        const maxFragments = Math.max(72, Math.round(180 * quality));
+        if (universeState.fragments.length > maxFragments) {
+          universeState.fragments.splice(0, universeState.fragments.length - maxFragments);
         }
       }
 
@@ -978,16 +649,20 @@
         const width = universeState.width;
         const height = universeState.height;
         const particles = universeState.particles;
+        const jitter = profile.jitter * frameScale;
+        const maxSpeed = profile.maxSpeed;
+        const radiusReturnFactor = 0.065 * frameScale;
+        const twinkleStep = 0.02 * frameScale;
+        const fragmentVelocityDamping = Math.pow(0.992, frameScale);
+        const fragmentRadiusDamping = Math.pow(0.997, frameScale);
 
         particles.forEach(function (particle) {
           particle.burstCooldownMs = Math.max(0, particle.burstCooldownMs - deltaMs);
 
-          const jitter = profile.jitter * frameScale;
           particle.vx += randomBetween(-jitter, jitter);
           particle.vy += randomBetween(-jitter, jitter);
 
           const speed = Math.hypot(particle.vx, particle.vy);
-          const maxSpeed = profile.maxSpeed;
           if (speed > maxSpeed) {
             particle.vx = (particle.vx / speed) * maxSpeed;
             particle.vy = (particle.vy / speed) * maxSpeed;
@@ -1020,6 +695,7 @@
             const deltaX = particleB.x - particleA.x;
             const deltaY = particleB.y - particleA.y;
             const minDistance = particleA.radius + particleB.radius;
+            if (Math.abs(deltaX) >= minDistance || Math.abs(deltaY) >= minDistance) continue;
             const distanceSquared = deltaX * deltaX + deltaY * deltaY;
             if (distanceSquared >= minDistance * minDistance || distanceSquared === 0) continue;
 
@@ -1074,9 +750,9 @@
         }
 
         particles.forEach(function (particle) {
-          particle.radius += (particle.baseRadius - particle.radius) * (0.065 * frameScale);
+          particle.radius += (particle.baseRadius - particle.radius) * radiusReturnFactor;
           particle.mass = Math.max(0.8, particle.radius * particle.radius);
-          particle.twinklePhase += particle.twinkleSpeed * 0.02 * frameScale;
+          particle.twinklePhase += particle.twinkleSpeed * twinkleStep;
         });
 
         const nextFragments = [];
@@ -1086,9 +762,9 @@
 
           fragment.x += fragment.vx * frameScale;
           fragment.y += fragment.vy * frameScale;
-          fragment.vx *= Math.pow(0.992, frameScale);
-          fragment.vy *= Math.pow(0.992, frameScale);
-          fragment.radius *= Math.pow(0.997, frameScale);
+          fragment.vx *= fragmentVelocityDamping;
+          fragment.vy *= fragmentVelocityDamping;
+          fragment.radius *= fragmentRadiusDamping;
 
           if (fragment.x < -4 || fragment.x > width + 4 || fragment.y < -4 || fragment.y > height + 4) return;
           nextFragments.push(fragment);
@@ -1109,20 +785,20 @@
           const starRadius = particle.radius * twinkle;
           const glowRadius = starRadius * (particle.baseRadius > profile.sparkleThreshold ? profile.glowLargeFactor : profile.glowSmallFactor);
           const glowGradient = context.createRadialGradient(particle.x, particle.y, 0, particle.x, particle.y, glowRadius);
-          glowGradient.addColorStop(0, toRgba(particle.color, profile.glowCoreAlpha));
-          glowGradient.addColorStop(0.5, toRgba(particle.color, profile.glowMidAlpha));
-          glowGradient.addColorStop(1, toRgba(particle.color, 0));
+          glowGradient.addColorStop(0, particle.glowColorInner);
+          glowGradient.addColorStop(0.5, particle.glowColorMid);
+          glowGradient.addColorStop(1, particle.glowColorOuter);
           context.fillStyle = glowGradient;
           context.beginPath();
           context.arc(particle.x, particle.y, glowRadius, 0, Math.PI * 2);
           context.fill();
 
-          context.fillStyle = toRgba(particle.color, profile.fillAlpha);
+          context.fillStyle = particle.fillColor;
           context.beginPath();
           context.arc(particle.x, particle.y, starRadius, 0, Math.PI * 2);
           context.fill();
 
-          if (particle.baseRadius >= profile.sparkleThreshold && twinkle > 1.04) {
+          if (universeState.qualityLevel >= 0.84 && particle.baseRadius >= profile.sparkleThreshold && twinkle > 1.04) {
             const sparkleLength = starRadius * 2.4;
             context.strokeStyle = toRgba(particle.color, profile.sparkleAlpha * (twinkle - 0.95));
             context.lineWidth = 0.7;
@@ -1164,6 +840,7 @@
 
         const deltaMs = clampValue(timestamp - universeState.lastTime, 10, 40);
         universeState.lastTime = timestamp;
+        updateUniverseAdaptiveQuality(deltaMs, timestamp);
         updateUniverseParticles(deltaMs);
         drawUniverseParticles();
         universeState.rafId = window.requestAnimationFrame(runUniverseAnimationFrame);
@@ -1183,6 +860,7 @@
 
         if (universeState.themeMode !== nextThemeMode) {
           universeState.themeMode = nextThemeMode;
+          resetUniverseAdaptiveQuality();
           universeState.particles = [];
           universeState.fragments = [];
         }
@@ -1206,14 +884,20 @@
         universeState.context = context;
         universeState.isSetup = true;
         universeState.themeMode = getUniverseThemeMode();
+        resetUniverseAdaptiveQuality();
         resizeUniverseCanvas();
         drawUniverseParticles();
 
+        let universeResizeFrameId = 0;
         window.addEventListener('resize', function () {
-          resizeUniverseCanvas();
-          if (!universeState.isRunning) {
-            drawUniverseParticles();
-          }
+          if (universeResizeFrameId) return;
+          universeResizeFrameId = window.requestAnimationFrame(function () {
+            universeResizeFrameId = 0;
+            resizeUniverseCanvas();
+            if (!universeState.isRunning) {
+              drawUniverseParticles();
+            }
+          });
         }, { passive: true });
 
         document.addEventListener('visibilitychange', function () {
@@ -1316,7 +1000,7 @@
         }, 0);
         const laneNaturalWidth = cardsTotalWidth + gap * Math.max(0, cards.length - 1);
         const sliderWidth = state.slider.clientWidth;
-        const isSmallViewport = window.matchMedia('(max-width: 992px)').matches;
+        const isSmallViewport = sliderViewportQuery ? sliderViewportQuery.matches : window.innerWidth <= 992;
 
         const targetWidth = isSmallViewport
           ? firstCard.getBoundingClientRect().width
@@ -1327,7 +1011,7 @@
       }
 
       function updateSliderSpeed(state) {
-        const isSmallViewport = window.matchMedia('(max-width: 992px)').matches;
+        const isSmallViewport = sliderViewportQuery ? sliderViewportQuery.matches : window.innerWidth <= 992;
         state.speed = isSmallViewport ? 0.026 : 0.045;
       }
 
@@ -1389,6 +1073,22 @@
         if (shouldPause && alignOnPause !== false) {
           snapLaneToCenter(state, 220);
         }
+        syncProjectAnimationLoopState();
+      }
+
+      function hasActiveProjectAnimationWork() {
+        if (!isProjectsInViewport) return false;
+        return projectSliderStates.some(function (state) {
+          return state.isVisible && !state.isAutoPaused && !state.isManualAnimating;
+        });
+      }
+
+      function syncProjectAnimationLoopState() {
+        if (hasActiveProjectAnimationWork()) {
+          startProjectAnimationLoop();
+          return;
+        }
+        stopProjectAnimationLoop();
       }
 
       function animateLaneBy(state, delta, durationMs, onComplete) {
@@ -1449,6 +1149,10 @@
       }
 
       function runProjectAnimation(now) {
+        if (!hasActiveProjectAnimationWork()) {
+          stopProjectAnimationLoop();
+          return;
+        }
         if (!projectAnimationLastTime) projectAnimationLastTime = now;
         const elapsed = Math.min(40, now - projectAnimationLastTime);
         projectAnimationLastTime = now;
@@ -1479,6 +1183,19 @@
       function setupProjectSliders() {
         if (!projectsExpandedContent) return;
         if (projectSliderStates.length > 0) return;
+
+        if ('IntersectionObserver' in window && !projectViewportObserver) {
+          projectViewportObserver = new IntersectionObserver(function (entries) {
+            const entry = entries[0];
+            isProjectsInViewport = Boolean(entry && entry.isIntersecting);
+            syncProjectAnimationLoopState();
+          }, {
+            root: null,
+            threshold: 0.01,
+            rootMargin: '120px 0px 120px 0px'
+          });
+          projectViewportObserver.observe(projectsExpandedContent);
+        }
 
         const sliderBlocks = projectsExpandedContent.querySelectorAll('.projects-slider-block');
         sliderBlocks.forEach(function (block) {
@@ -1512,9 +1229,6 @@
 
           toggleButton.addEventListener('click', function () {
             setSliderPaused(state, !state.isAutoPaused, true);
-            if (!state.isAutoPaused) {
-              startProjectAnimationLoop();
-            }
           });
 
           updateSliderEdgeOffset(state);
@@ -1526,11 +1240,15 @@
         refreshSliderToggleButtonsText();
 
         window.addEventListener('resize', function () {
-          projectSliderStates.forEach(function (state) {
-            updateSliderEdgeOffset(state);
-            updateSliderSpeed(state);
-            snapLaneToCenter(state, 0);
-            applyLaneTransform(state);
+          if (projectResizeFrameId) return;
+          projectResizeFrameId = window.requestAnimationFrame(function () {
+            projectResizeFrameId = 0;
+            projectSliderStates.forEach(function (state) {
+              updateSliderEdgeOffset(state);
+              updateSliderSpeed(state);
+              snapLaneToCenter(state, 0);
+              applyLaneTransform(state);
+            });
           });
         });
       }
@@ -1551,7 +1269,7 @@
             snapLaneToCenter(state, 0);
             applyLaneTransform(state);
           });
-          startProjectAnimationLoop();
+          syncProjectAnimationLoopState();
           return;
         }
 
@@ -1586,12 +1304,22 @@
         }
 
         section.classList.remove('section-focus');
-        void section.offsetWidth;
-        section.classList.add('section-focus');
+        if (sectionHighlightFrameId) {
+          window.cancelAnimationFrame(sectionHighlightFrameId);
+          sectionHighlightFrameId = 0;
+        }
+        sectionHighlightFrameId = window.requestAnimationFrame(function () {
+          sectionHighlightFrameId = 0;
+          section.classList.add('section-focus');
+        });
         activeSection = section;
 
-        if (activeTimer) clearTimeout(activeTimer);
-        activeTimer = setTimeout(function () {
+        if (activeTimer) {
+          clearTimeout(activeTimer);
+          activeTimer = null;
+        }
+        activeTimer = window.setTimeout(function () {
+          activeTimer = null;
           section.classList.remove('section-focus');
           if (activeSection === section) activeSection = null;
         }, 1700);
@@ -1602,7 +1330,7 @@
         const targetSection = document.querySelector(targetId);
         if (!targetSection) return false;
 
-        const isMobileViewport = window.matchMedia(PHONE_MEDIA_QUERY).matches;
+        const isMobileViewport = phoneViewportQuery ? phoneViewportQuery.matches : window.innerWidth <= 767;
         const useDefaultTopScroll = isMobileViewport && targetId === '#projects';
 
         if (useDefaultTopScroll) {
@@ -1611,7 +1339,11 @@
           scrollToCenter(targetSection);
         }
 
-        setTimeout(function () {
+        if (pendingSectionHighlightTimeoutId) {
+          window.clearTimeout(pendingSectionHighlightTimeoutId);
+        }
+        pendingSectionHighlightTimeoutId = window.setTimeout(function () {
+          pendingSectionHighlightTimeoutId = 0;
           highlightSection(targetId);
         }, useDefaultTopScroll ? 360 : 460);
 
@@ -1675,7 +1407,7 @@
         const dragStepThreshold = 34;
 
         function isPhoneViewport() {
-          return window.matchMedia(PHONE_MEDIA_QUERY).matches;
+          return phoneViewportQuery ? phoneViewportQuery.matches : window.innerWidth <= 767;
         }
 
         function getCssNumber(variableName, fallbackValue) {
@@ -1887,23 +1619,25 @@
           }
         });
 
+        let radialSyncFrameId = 0;
+        function scheduleRadialWheelSync() {
+          if (!radialState.isOpen || radialSyncFrameId) return;
+          radialSyncFrameId = window.requestAnimationFrame(function () {
+            radialSyncFrameId = 0;
+            syncWheelGeometry();
+            renderWheel();
+          });
+        }
+
         window.addEventListener('resize', function () {
           if (!isPhoneViewport() && radialState.isOpen) {
             setRadialMenuOpen(false);
             return;
           }
-          if (radialState.isOpen) {
-            syncWheelGeometry();
-            renderWheel();
-          }
+          scheduleRadialWheelSync();
         });
 
-        window.addEventListener('scroll', function () {
-          if (radialState.isOpen) {
-            syncWheelGeometry();
-            renderWheel();
-          }
-        }, { passive: true });
+        window.addEventListener('scroll', scheduleRadialWheelSync, { passive: true });
 
         syncWheelGeometry();
         renderWheel();
@@ -1918,9 +1652,20 @@
           return;
         }
 
-        setTimeout(function () {
+        if (focusHashScrollTimeoutId) {
+          window.clearTimeout(focusHashScrollTimeoutId);
+          focusHashScrollTimeoutId = 0;
+        }
+        if (focusHashHighlightTimeoutId) {
+          window.clearTimeout(focusHashHighlightTimeoutId);
+          focusHashHighlightTimeoutId = 0;
+        }
+
+        focusHashScrollTimeoutId = window.setTimeout(function () {
+          focusHashScrollTimeoutId = 0;
           scrollToCenter(targetSection);
-          setTimeout(function () {
+          focusHashHighlightTimeoutId = window.setTimeout(function () {
+            focusHashHighlightTimeoutId = 0;
             highlightSection(targetId);
             clearHashFromUrl();
           }, 260);
@@ -2112,7 +1857,4 @@
       focusSectionFromHash();
       window.addEventListener('hashchange', focusSectionFromHash);
     })();
-  </script>
-</body>
-</html>
 
