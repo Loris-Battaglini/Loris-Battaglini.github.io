@@ -593,14 +593,85 @@
         dpr: 1,
         rafId: 0,
         isRunning: false,
-        lastTime: 0
+        lastTime: 0,
+        themeMode: 'light'
       };
-      const universePalette = [
-        { r: 109, g: 126, b: 152, a: 0.34 },
-        { r: 136, g: 149, b: 168, a: 0.3 },
-        { r: 170, g: 160, b: 146, a: 0.26 },
-        { r: 95, g: 109, b: 132, a: 0.28 }
-      ];
+      const universeThemeProfiles = {
+        light: {
+          particleArea: 29500,
+          minParticles: 26,
+          maxParticles: 72,
+          largeStarChance: 0.15,
+          largeRadiusMin: 1.6,
+          largeRadiusMax: 2.95,
+          smallRadiusMin: 0.45,
+          smallRadiusMax: 1.42,
+          speedMin: 0.13,
+          speedMax: 0.48,
+          jitter: 0.0042,
+          maxSpeed: 0.88,
+          restitution: 0.85,
+          impactThreshold: 0.11,
+          glowLargeFactor: 4.65,
+          glowSmallFactor: 3.8,
+          glowCoreAlpha: 0.22,
+          glowMidAlpha: 0.09,
+          fillAlpha: 0.64,
+          fragmentMinCount: 1,
+          fragmentMaxCount: 3,
+          fragmentRadiusMin: 0.16,
+          fragmentRadiusMax: 0.56,
+          fragmentLifeMin: 220,
+          fragmentLifeMax: 620,
+          fragmentAlphaMin: 0.22,
+          fragmentAlphaMax: 0.46,
+          sparkleThreshold: 2.2,
+          sparkleAlpha: 0.18,
+          palette: [
+            { r: 114, g: 134, b: 170, a: 0.36 },
+            { r: 144, g: 160, b: 186, a: 0.32 },
+            { r: 188, g: 176, b: 153, a: 0.27 },
+            { r: 96, g: 112, b: 141, a: 0.3 }
+          ]
+        },
+        dark: {
+          particleArea: 23200,
+          minParticles: 34,
+          maxParticles: 96,
+          largeStarChance: 0.22,
+          largeRadiusMin: 1.95,
+          largeRadiusMax: 3.45,
+          smallRadiusMin: 0.52,
+          smallRadiusMax: 1.82,
+          speedMin: 0.16,
+          speedMax: 0.72,
+          jitter: 0.0068,
+          maxSpeed: 1.18,
+          restitution: 0.9,
+          impactThreshold: 0.08,
+          glowLargeFactor: 5.25,
+          glowSmallFactor: 4.35,
+          glowCoreAlpha: 0.34,
+          glowMidAlpha: 0.14,
+          fillAlpha: 0.84,
+          fragmentMinCount: 2,
+          fragmentMaxCount: 5,
+          fragmentRadiusMin: 0.2,
+          fragmentRadiusMax: 0.78,
+          fragmentLifeMin: 260,
+          fragmentLifeMax: 760,
+          fragmentAlphaMin: 0.3,
+          fragmentAlphaMax: 0.6,
+          sparkleThreshold: 2.35,
+          sparkleAlpha: 0.28,
+          palette: [
+            { r: 120, g: 166, b: 255, a: 0.58 },
+            { r: 95, g: 226, b: 255, a: 0.52 },
+            { r: 255, g: 192, b: 126, a: 0.42 },
+            { r: 196, g: 220, b: 255, a: 0.48 }
+          ]
+        }
+      };
 
       const italianSnapshot = {
         text: Object.create(null),
@@ -800,28 +871,45 @@
         return 'rgba(' + color.r + ',' + color.g + ',' + color.b + ',' + alpha + ')';
       }
 
+      function getUniverseThemeMode() {
+        return document.body.classList.contains('theme-dark') ? 'dark' : 'light';
+      }
+
+      function getUniverseProfile() {
+        return universeThemeProfiles[universeState.themeMode] || universeThemeProfiles.light;
+      }
+
       function getUniverseTargetParticleCount(width, height) {
-        const countByArea = Math.round((width * height) / 26000);
-        return clampValue(countByArea, 28, 84);
+        const profile = getUniverseProfile();
+        const countByArea = Math.round((width * height) / profile.particleArea);
+        return clampValue(countByArea, profile.minParticles, profile.maxParticles);
       }
 
       function createUniverseParticle(width, height) {
-        const isLarge = Math.random() < 0.18;
-        const baseRadius = isLarge ? randomBetween(1.75, 3.05) : randomBetween(0.56, 1.85);
+        const profile = getUniverseProfile();
+        const isLarge = Math.random() < profile.largeStarChance;
+        const baseRadius = isLarge
+          ? randomBetween(profile.largeRadiusMin, profile.largeRadiusMax)
+          : randomBetween(profile.smallRadiusMin, profile.smallRadiusMax);
         const angle = Math.random() * Math.PI * 2;
-        const speed = randomBetween(0.22, 0.7) * (2.1 / (baseRadius + 0.9));
-        const color = universePalette[Math.floor(Math.random() * universePalette.length)];
+        const speed = randomBetween(profile.speedMin, profile.speedMax) * (2 / (baseRadius + 0.8));
+        const color = profile.palette[Math.floor(Math.random() * profile.palette.length)];
+        const twinkleAmplitude = randomBetween(0.08, 0.34) * (isLarge ? 1.35 : 0.86);
+        const depth = randomBetween(0.82, 1.22) * (isLarge ? 1.18 : 1);
         return {
           x: randomBetween(0, width),
           y: randomBetween(0, height),
-          vx: Math.cos(angle) * speed,
-          vy: Math.sin(angle) * speed,
+          vx: Math.cos(angle) * speed * depth,
+          vy: Math.sin(angle) * speed * depth,
           radius: baseRadius,
           baseRadius: baseRadius,
           minRadius: Math.max(0.4, baseRadius * randomBetween(0.4, 0.58)),
           mass: Math.max(0.8, baseRadius * baseRadius),
           color: color,
-          burstCooldownMs: 0
+          burstCooldownMs: 0,
+          twinklePhase: randomBetween(0, Math.PI * 2),
+          twinkleSpeed: randomBetween(0.35, 1.08),
+          twinkleAmplitude: twinkleAmplitude
         };
       }
 
@@ -863,13 +951,14 @@
       }
 
       function spawnUniverseFragments(x, y, impactStrength, colorA, colorB) {
-        const fragmentCount = Math.round(randomBetween(2, 5) + impactStrength * 2);
+        const profile = getUniverseProfile();
+        const fragmentCount = Math.round(randomBetween(profile.fragmentMinCount, profile.fragmentMaxCount) + impactStrength * 1.7);
         for (let index = 0; index < fragmentCount; index += 1) {
           const angle = randomBetween(0, Math.PI * 2);
-          const speed = randomBetween(0.35, 1.35) * (0.7 + impactStrength);
-          const radius = randomBetween(0.35, 1.15) * (0.75 + impactStrength * 0.45);
+          const speed = randomBetween(0.28, 1.22) * (0.64 + impactStrength);
+          const radius = randomBetween(profile.fragmentRadiusMin, profile.fragmentRadiusMax) * (0.72 + impactStrength * 0.4);
           const sourceColor = Math.random() < 0.5 ? colorA : colorB;
-          const lifetime = randomBetween(240, 760);
+          const lifetime = randomBetween(profile.fragmentLifeMin, profile.fragmentLifeMax);
           universeState.fragments.push({
             x: x,
             y: y,
@@ -882,7 +971,7 @@
               r: sourceColor.r,
               g: sourceColor.g,
               b: sourceColor.b,
-              a: sourceColor.a * randomBetween(0.28, 0.55)
+              a: sourceColor.a * randomBetween(profile.fragmentAlphaMin, profile.fragmentAlphaMax)
             }
           });
         }
@@ -894,6 +983,7 @@
 
       function updateUniverseParticles(deltaMs) {
         if (!universeState.context) return;
+        const profile = getUniverseProfile();
         const frameScale = deltaMs / 16.667;
         const width = universeState.width;
         const height = universeState.height;
@@ -902,12 +992,12 @@
         particles.forEach(function (particle) {
           particle.burstCooldownMs = Math.max(0, particle.burstCooldownMs - deltaMs);
 
-          const jitter = 0.008 * frameScale;
+          const jitter = profile.jitter * frameScale;
           particle.vx += randomBetween(-jitter, jitter);
           particle.vy += randomBetween(-jitter, jitter);
 
           const speed = Math.hypot(particle.vx, particle.vy);
-          const maxSpeed = 1.25;
+          const maxSpeed = profile.maxSpeed;
           if (speed > maxSpeed) {
             particle.vx = (particle.vx / speed) * maxSpeed;
             particle.vy = (particle.vy / speed) * maxSpeed;
@@ -958,7 +1048,7 @@
             const velocityAlongNormal = relativeVx * normalX + relativeVy * normalY;
 
             if (velocityAlongNormal < 0) {
-              const restitution = 0.9;
+              const restitution = profile.restitution;
               const impulse = -(1 + restitution) * velocityAlongNormal / ((1 / particleA.mass) + (1 / particleB.mass));
               const impulseX = impulse * normalX;
               const impulseY = impulse * normalY;
@@ -978,7 +1068,7 @@
 
             const impactStrength = clampValue(Math.abs(velocityAlongNormal) * 0.92 + overlap * 0.35, 0, 1.4);
             const canBurst = particleA.burstCooldownMs <= 0 || particleB.burstCooldownMs <= 0;
-            if (canBurst && impactStrength > 0.08) {
+            if (canBurst && impactStrength > profile.impactThreshold) {
               const burstX = (particleA.x + particleB.x) * 0.5;
               const burstY = (particleA.y + particleB.y) * 0.5;
               spawnUniverseFragments(burstX, burstY, impactStrength, particleA.color, particleB.color);
@@ -996,6 +1086,7 @@
         particles.forEach(function (particle) {
           particle.radius += (particle.baseRadius - particle.radius) * (0.065 * frameScale);
           particle.mass = Math.max(0.8, particle.radius * particle.radius);
+          particle.twinklePhase += particle.twinkleSpeed * 0.02 * frameScale;
         });
 
         const nextFragments = [];
@@ -1017,25 +1108,41 @@
 
       function drawUniverseParticles() {
         if (!universeState.context) return;
+        const profile = getUniverseProfile();
         const context = universeState.context;
+        const now = performance.now();
 
         context.clearRect(0, 0, universeState.width, universeState.height);
 
         universeState.particles.forEach(function (particle) {
-          const glowRadius = particle.radius * (particle.baseRadius > 2.1 ? 5.1 : 4.2);
+          const twinkle = 1 + Math.sin(now * 0.0012 * particle.twinkleSpeed + particle.twinklePhase) * particle.twinkleAmplitude;
+          const starRadius = particle.radius * twinkle;
+          const glowRadius = starRadius * (particle.baseRadius > profile.sparkleThreshold ? profile.glowLargeFactor : profile.glowSmallFactor);
           const glowGradient = context.createRadialGradient(particle.x, particle.y, 0, particle.x, particle.y, glowRadius);
-          glowGradient.addColorStop(0, toRgba(particle.color, 0.2));
-          glowGradient.addColorStop(0.5, toRgba(particle.color, 0.07));
+          glowGradient.addColorStop(0, toRgba(particle.color, profile.glowCoreAlpha));
+          glowGradient.addColorStop(0.5, toRgba(particle.color, profile.glowMidAlpha));
           glowGradient.addColorStop(1, toRgba(particle.color, 0));
           context.fillStyle = glowGradient;
           context.beginPath();
           context.arc(particle.x, particle.y, glowRadius, 0, Math.PI * 2);
           context.fill();
 
-          context.fillStyle = toRgba(particle.color, 0.58);
+          context.fillStyle = toRgba(particle.color, profile.fillAlpha);
           context.beginPath();
-          context.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+          context.arc(particle.x, particle.y, starRadius, 0, Math.PI * 2);
           context.fill();
+
+          if (particle.baseRadius >= profile.sparkleThreshold && twinkle > 1.04) {
+            const sparkleLength = starRadius * 2.4;
+            context.strokeStyle = toRgba(particle.color, profile.sparkleAlpha * (twinkle - 0.95));
+            context.lineWidth = 0.7;
+            context.beginPath();
+            context.moveTo(particle.x - sparkleLength, particle.y);
+            context.lineTo(particle.x + sparkleLength, particle.y);
+            context.moveTo(particle.x, particle.y - sparkleLength);
+            context.lineTo(particle.x, particle.y + sparkleLength);
+            context.stroke();
+          }
         });
 
         universeState.fragments.forEach(function (fragment) {
@@ -1081,12 +1188,13 @@
 
       function syncUniverseParticlesState() {
         if (!universeCanvas || !universeState.context) return;
-        const isDarkTheme = document.body.classList.contains('theme-dark');
+        const nextThemeMode = getUniverseThemeMode();
         const reduceMotionEnabled = reducedMotionQuery ? reducedMotionQuery.matches : false;
 
-        if (isDarkTheme) {
-          stopUniverseAnimation(true);
-          return;
+        if (universeState.themeMode !== nextThemeMode) {
+          universeState.themeMode = nextThemeMode;
+          universeState.particles = [];
+          universeState.fragments = [];
         }
 
         resizeUniverseCanvas();
@@ -1107,6 +1215,7 @@
 
         universeState.context = context;
         universeState.isSetup = true;
+        universeState.themeMode = getUniverseThemeMode();
         resizeUniverseCanvas();
         drawUniverseParticles();
 
@@ -1682,6 +1791,7 @@
 
         radialMenuShell.addEventListener('pointerdown', function (event) {
           if (!radialState.isOpen) return;
+          if (event.pointerType === 'mouse') return;
           radialState.isDragging = true;
           radialState.pointerId = event.pointerId;
           radialState.dragStartY = event.clientY;
@@ -1702,6 +1812,7 @@
         });
 
         radialMenuShell.addEventListener('pointerup', function (event) {
+          if (!radialState.isDragging) return;
           if (event.pointerId !== radialState.pointerId) return;
           radialState.isDragging = false;
           radialState.pointerId = null;
@@ -1711,6 +1822,7 @@
         });
 
         radialMenuShell.addEventListener('pointercancel', function (event) {
+          if (!radialState.isDragging) return;
           if (event.pointerId !== radialState.pointerId) return;
           radialState.isDragging = false;
           radialState.pointerId = null;
@@ -1720,7 +1832,8 @@
 
         radialMenuShell.addEventListener('click', function (event) {
           if (!radialState.isOpen) return;
-          if (event.target && event.target.closest('[data-radial-item]')) return;
+          const clickTarget = event.target instanceof Element ? event.target : null;
+          if (clickTarget && clickTarget.closest('[data-radial-item]')) return;
           if (radialState.suppressBackgroundTap) {
             radialState.suppressBackgroundTap = false;
             return;
