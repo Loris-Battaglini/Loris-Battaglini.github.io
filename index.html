@@ -1041,16 +1041,17 @@
 
       function setupSliderTouchInteractions(state) {
         if (!state.slider) return;
-        const dragThreshold = 6;
-        const dragDirectionRatio = 1.1;
+        const dragThreshold = 12;
+        const dragDirectionRatio = 1.25;
+        const swipeStepThreshold = 28;
 
         function beginDrag(pointerId, clientX, clientY) {
           state.dragPointerId = pointerId;
           state.dragStartX = clientX;
           state.dragStartY = clientY;
-          state.dragStartOffset = state.offset;
           state.dragDirectionLocked = false;
           state.dragIsHorizontal = false;
+          state.dragDeltaX = 0;
           state.dragSuppressClick = false;
           setSliderPaused(state, true, false);
           syncProjectAnimationLoopState();
@@ -1074,19 +1075,31 @@
 
           nativeEvent.preventDefault();
           state.dragSuppressClick = true;
-          state.offset = state.dragStartOffset + deltaX;
-          applyLaneTransform(state);
+          state.dragDeltaX = deltaX;
         }
 
         function endDrag() {
           if (state.dragPointerId === null) return;
+          const shouldStep = state.dragIsHorizontal && Math.abs(state.dragDeltaX) >= swipeStepThreshold;
+          const direction = state.dragDeltaX < 0 ? 1 : -1;
           state.dragPointerId = null;
           state.dragDirectionLocked = false;
           state.dragIsHorizontal = false;
-          state.dragStartOffset = state.offset;
-          normalizeForwardLoop(state);
-          normalizeBackwardLoop(state);
-          applyLaneTransform(state);
+          state.dragDeltaX = 0;
+
+          if (shouldStep) {
+            stepSlider(state, direction);
+            window.setTimeout(function () {
+              state.dragSuppressClick = false;
+            }, 260);
+            return;
+          }
+
+          if (state.dragSuppressClick) {
+            window.setTimeout(function () {
+              state.dragSuppressClick = false;
+            }, 180);
+          }
           syncProjectAnimationLoopState();
         }
 
@@ -1158,7 +1171,7 @@
         if (!projectsExpandedContent) return;
         if (projectSliderStates.length > 0) return;
 
-        const shouldStartPausedOnTouch = isTouchPrimaryInput();
+        const shouldStartPausedOnTouch = false;
         const sliderBlocks = projectsExpandedContent.querySelectorAll('.projects-slider-block');
         sliderBlocks.forEach(function (block) {
           const slider = block.querySelector('.projects-slider');
@@ -1182,9 +1195,9 @@
             dragPointerId: null,
             dragStartX: 0,
             dragStartY: 0,
-            dragStartOffset: 0,
             dragDirectionLocked: false,
             dragIsHorizontal: false,
+            dragDeltaX: 0,
             dragSuppressClick: false,
             lastKnownSliderWidth: 0
           };
@@ -1246,6 +1259,7 @@
           setupProjectSliders();
           projectSliderStates.forEach(function (state) {
             state.isVisible = true;
+            setSliderPaused(state, false, false);
             updateSliderEdgeOffset(state);
             state.lastKnownSliderWidth = state.slider.clientWidth;
             if (isTouchPrimaryInput()) {
