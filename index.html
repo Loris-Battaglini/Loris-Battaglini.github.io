@@ -1041,74 +1041,116 @@
 
       function setupSliderTouchInteractions(state) {
         if (!state.slider) return;
+        const dragThreshold = 6;
+        const dragDirectionRatio = 1.1;
 
-        state.slider.addEventListener('touchstart', function (event) {
-          const initialTouch = event.changedTouches && event.changedTouches.length > 0
-            ? event.changedTouches[0]
-            : null;
-          if (!initialTouch) return;
-          state.touchIdentifier = initialTouch.identifier;
-          state.touchStartX = initialTouch.clientX;
-          state.touchStartY = initialTouch.clientY;
-          state.touchStartOffset = state.offset;
-          state.touchDirectionLocked = false;
-          state.touchIsHorizontal = false;
-          state.touchSuppressClick = false;
+        function beginDrag(pointerId, clientX, clientY) {
+          state.dragPointerId = pointerId;
+          state.dragStartX = clientX;
+          state.dragStartY = clientY;
+          state.dragStartOffset = state.offset;
+          state.dragDirectionLocked = false;
+          state.dragIsHorizontal = false;
+          state.dragSuppressClick = false;
           setSliderPaused(state, true, false);
           syncProjectAnimationLoopState();
-        }, { passive: true });
+        }
 
-        state.slider.addEventListener('touchmove', function (event) {
-          if (state.touchIdentifier === null) return;
-          const trackedTouch = findTouchByIdentifier(event.touches, state.touchIdentifier);
-          if (!trackedTouch) return;
+        function moveDrag(clientX, clientY, nativeEvent) {
+          if (state.dragPointerId === null) return;
 
-          const deltaX = trackedTouch.clientX - state.touchStartX;
-          const deltaY = trackedTouch.clientY - state.touchStartY;
+          const deltaX = clientX - state.dragStartX;
+          const deltaY = clientY - state.dragStartY;
           const absX = Math.abs(deltaX);
           const absY = Math.abs(deltaY);
 
-          if (!state.touchDirectionLocked) {
-            if (absX < 6 && absY < 6) return;
-            state.touchDirectionLocked = true;
-            state.touchIsHorizontal = absX > absY * 1.1;
+          if (!state.dragDirectionLocked) {
+            if (absX < dragThreshold && absY < dragThreshold) return;
+            state.dragDirectionLocked = true;
+            state.dragIsHorizontal = absX > absY * dragDirectionRatio;
           }
 
-          if (!state.touchIsHorizontal) return;
+          if (!state.dragIsHorizontal) return;
 
-          event.preventDefault();
-          state.touchSuppressClick = true;
-          state.offset = state.touchStartOffset + deltaX;
-          normalizeForwardLoop(state);
-          normalizeBackwardLoop(state);
+          nativeEvent.preventDefault();
+          state.dragSuppressClick = true;
+          state.offset = state.dragStartOffset + deltaX;
           applyLaneTransform(state);
-        }, { passive: false });
+        }
 
-        function finishTouch(event) {
-          if (state.touchIdentifier === null) return;
-          if (event.type !== 'touchcancel') {
-            const endedTouch = findTouchByIdentifier(event.changedTouches, state.touchIdentifier);
-            if (!endedTouch) return;
-          }
-
-          state.touchIdentifier = null;
-          state.touchDirectionLocked = false;
-          state.touchIsHorizontal = false;
-          state.touchStartOffset = state.offset;
+        function endDrag() {
+          if (state.dragPointerId === null) return;
+          state.dragPointerId = null;
+          state.dragDirectionLocked = false;
+          state.dragIsHorizontal = false;
+          state.dragStartOffset = state.offset;
           normalizeForwardLoop(state);
           normalizeBackwardLoop(state);
           applyLaneTransform(state);
           syncProjectAnimationLoopState();
         }
 
-        state.slider.addEventListener('touchend', finishTouch, { passive: true });
-        state.slider.addEventListener('touchcancel', finishTouch, { passive: true });
+        if ('PointerEvent' in window) {
+          state.slider.addEventListener('pointerdown', function (event) {
+            if (event.pointerType === 'mouse') return;
+            beginDrag(event.pointerId, event.clientX, event.clientY);
+            if (typeof state.slider.setPointerCapture === 'function') {
+              state.slider.setPointerCapture(event.pointerId);
+            }
+          }, { passive: true });
+
+          state.slider.addEventListener('pointermove', function (event) {
+            if (state.dragPointerId === null || event.pointerId !== state.dragPointerId) return;
+            moveDrag(event.clientX, event.clientY, event);
+          }, { passive: false });
+
+          function finishPointerDrag(event) {
+            if (state.dragPointerId === null || event.pointerId !== state.dragPointerId) return;
+            if (typeof state.slider.hasPointerCapture === 'function' &&
+              state.slider.hasPointerCapture(event.pointerId) &&
+              typeof state.slider.releasePointerCapture === 'function'
+            ) {
+              state.slider.releasePointerCapture(event.pointerId);
+            }
+            endDrag();
+          }
+
+          state.slider.addEventListener('pointerup', finishPointerDrag, { passive: true });
+          state.slider.addEventListener('pointercancel', finishPointerDrag, { passive: true });
+        } else {
+          state.slider.addEventListener('touchstart', function (event) {
+            const initialTouch = event.changedTouches && event.changedTouches.length > 0
+              ? event.changedTouches[0]
+              : null;
+            if (!initialTouch) return;
+            beginDrag(initialTouch.identifier, initialTouch.clientX, initialTouch.clientY);
+          }, { passive: true });
+
+          state.slider.addEventListener('touchmove', function (event) {
+            if (state.dragPointerId === null) return;
+            const trackedTouch = findTouchByIdentifier(event.touches, state.dragPointerId);
+            if (!trackedTouch) return;
+            moveDrag(trackedTouch.clientX, trackedTouch.clientY, event);
+          }, { passive: false });
+
+          function finishTouchDrag(event) {
+            if (state.dragPointerId === null) return;
+            if (event.type !== 'touchcancel') {
+              const endedTouch = findTouchByIdentifier(event.changedTouches, state.dragPointerId);
+              if (!endedTouch) return;
+            }
+            endDrag();
+          }
+
+          state.slider.addEventListener('touchend', finishTouchDrag, { passive: true });
+          state.slider.addEventListener('touchcancel', finishTouchDrag, { passive: true });
+        }
 
         state.slider.addEventListener('click', function (event) {
-          if (!state.touchSuppressClick) return;
+          if (!state.dragSuppressClick) return;
           event.preventDefault();
           event.stopPropagation();
-          state.touchSuppressClick = false;
+          state.dragSuppressClick = false;
         }, true);
       }
 
@@ -1137,13 +1179,14 @@
             isVisible: false,
             offset: 0,
             speed: 0.045,
-            touchIdentifier: null,
-            touchStartX: 0,
-            touchStartY: 0,
-            touchStartOffset: 0,
-            touchDirectionLocked: false,
-            touchIsHorizontal: false,
-            touchSuppressClick: false
+            dragPointerId: null,
+            dragStartX: 0,
+            dragStartY: 0,
+            dragStartOffset: 0,
+            dragDirectionLocked: false,
+            dragIsHorizontal: false,
+            dragSuppressClick: false,
+            lastKnownSliderWidth: 0
           };
 
           prevButton.addEventListener('click', function () {
@@ -1163,6 +1206,7 @@
           updateSliderEdgeOffset(state);
           updateSliderSpeed(state);
           applyLaneTransform(state);
+          state.lastKnownSliderWidth = state.slider.clientWidth;
           projectSliderStates.push(state);
         });
 
@@ -1170,7 +1214,11 @@
 
         window.addEventListener('resize', function () {
           projectSliderStates.forEach(function (state) {
-            if (state.touchIdentifier !== null) return;
+            if (state.dragPointerId !== null) return;
+            const nextSliderWidth = state.slider.clientWidth;
+            const widthChanged = Math.abs(nextSliderWidth - state.lastKnownSliderWidth) > 1;
+            if (!widthChanged) return;
+            state.lastKnownSliderWidth = nextSliderWidth;
             updateSliderEdgeOffset(state);
             updateSliderSpeed(state);
             if (isTouchPrimaryInput()) {
@@ -1199,6 +1247,7 @@
           projectSliderStates.forEach(function (state) {
             state.isVisible = true;
             updateSliderEdgeOffset(state);
+            state.lastKnownSliderWidth = state.slider.clientWidth;
             if (isTouchPrimaryInput()) {
               normalizeForwardLoop(state);
               normalizeBackwardLoop(state);
