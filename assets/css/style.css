@@ -249,7 +249,7 @@ header::after {
   isolation: isolate;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.3s ease;
+  transition: none;
 }
 
 .radial-menu-open .radial-menu-panel {
@@ -263,6 +263,7 @@ header::after {
   border: 0;
   cursor: pointer;
   background: transparent;
+  will-change: backdrop-filter;
 }
 
 .radial-menu-shell {
@@ -382,6 +383,120 @@ body.radial-menu-open header {
 .radial-menu-item.is-active::before {
   opacity: 1;
   transform: scale(1);
+}
+
+/* Light-mode radial menu: cinematic priority and contrast */
+body.radial-menu-open:not(.theme-dark) .radial-menu-overlay {
+  background:
+    radial-gradient(980px 620px at 14% 24%, rgba(9, 24, 56, 0.18), rgba(9, 24, 56, 0.42) 56%, rgba(8, 18, 37, 0.56) 100%),
+    radial-gradient(540px 340px at 82% 78%, rgba(229, 139, 99, 0.14), transparent 76%),
+    linear-gradient(120deg, rgba(8, 18, 38, 0.08), rgba(8, 18, 38, 0.16));
+  backdrop-filter: blur(6px) saturate(124%);
+  -webkit-backdrop-filter: blur(6px) saturate(124%);
+}
+
+body.radial-menu-open:not(.theme-dark) .radial-menu-orbit::before {
+  content: "";
+  position: fixed;
+  left: var(--wheel-center-x);
+  top: var(--wheel-center-y);
+  width: clamp(360px, 72vw, 580px);
+  height: clamp(320px, 62vw, 520px);
+  transform: translate(-22%, -44%);
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(58% 58% at 34% 42%, rgba(120, 181, 255, 0.42), rgba(120, 181, 255, 0) 68%), radial-gradient(52% 52% at 72% 74%, rgba(255, 169, 124, 0.28), rgba(255, 169, 124, 0) 72%);
+  filter: blur(26px);
+  opacity: 0.9;
+  z-index: -2;
+  will-change: transform, opacity;
+  animation: radial-light-aura-pulse 4.8s ease-in-out infinite;
+}
+
+body.radial-menu-open:not(.theme-dark) .radial-menu-orbit::after {
+  content: "";
+  position: fixed;
+  left: var(--wheel-center-x);
+  top: var(--wheel-center-y);
+  width: clamp(290px, 52vw, 430px);
+  height: clamp(290px, 52vw, 430px);
+  transform: translate(-26%, -50%);
+  border-radius: 50%;
+  pointer-events: none;
+  border: 1px solid rgba(139, 190, 255, 0.32);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.18), inset 0 0 26px rgba(123, 183, 255, 0.26);
+  opacity: 0.72;
+  z-index: -1;
+  will-change: transform, opacity;
+  animation: radial-light-ring-spin 20s linear infinite;
+}
+
+body.radial-menu-open:not(.theme-dark) .radial-menu-item {
+  border-color: rgba(255, 255, 255, 0.4);
+  background: linear-gradient(132deg, rgba(14, 35, 79, 0.95), rgba(20, 62, 124, 0.9) 56%, rgba(229, 139, 99, 0.88));
+  color: #f5faff;
+  text-shadow: 0 1px 0 rgba(7, 14, 28, 0.5);
+  letter-spacing: 0.018em;
+  padding: 0.56rem 1.02rem;
+  box-shadow: 0 18px 36px rgba(6, 14, 31, 0.44), 0 0 22px rgba(47, 118, 210, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(11px) saturate(165%);
+  -webkit-backdrop-filter: blur(11px) saturate(165%);
+}
+
+body.radial-menu-open:not(.theme-dark) .radial-menu-item::before {
+  background: radial-gradient(138% 138% at 14% 50%, rgba(132, 188, 255, 0.62), rgba(132, 188, 255, 0) 65%);
+  box-shadow: 0 10px 20px rgba(7, 16, 36, 0.2);
+  opacity: 0.84;
+  transform: scale(1);
+}
+
+body.radial-menu-open:not(.theme-dark) .radial-menu-item::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+body.radial-menu-open:not(.theme-dark) .radial-menu-item:hover,
+body.radial-menu-open:not(.theme-dark) .radial-menu-item:focus-visible {
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.56);
+  background: linear-gradient(132deg, rgba(16, 50, 105, 0.96), rgba(27, 90, 175, 0.92) 52%, rgba(243, 151, 108, 0.9));
+  box-shadow: 0 20px 38px rgba(6, 14, 31, 0.52), 0 0 30px rgba(74, 152, 255, 0.62), inset 0 1px 0 rgba(255, 255, 255, 0.36);
+}
+
+body.radial-menu-open:not(.theme-dark) .radial-menu-item.is-active {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.68);
+  background: linear-gradient(122deg, #1460d9 0%, #2f8cff 44%, #ff9d6b 100%);
+  box-shadow: 0 22px 44px rgba(13, 42, 95, 0.58), 0 0 36px rgba(55, 139, 255, 0.72), 0 0 16px rgba(255, 168, 118, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.34);
+}
+
+@keyframes radial-light-aura-pulse {
+  0% {
+    transform: translate(-22%, -44%) scale(0.96);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translate(-22%, -44%) scale(1.03);
+    opacity: 0.92;
+  }
+  100% {
+    transform: translate(-22%, -44%) scale(0.98);
+    opacity: 0.76;
+  }
+}
+
+@keyframes radial-light-ring-spin {
+  0% {
+    transform: translate(-26%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-26%, -50%) rotate(360deg);
+  }
 }
 
 .header-main-row {
@@ -1736,6 +1851,11 @@ footer textarea:focus {
     filter: none;
     transition: none;
   }
+  .universe-canvas,
+  body.radial-menu-open:not(.theme-dark) .radial-menu-orbit::before,
+  body.radial-menu-open:not(.theme-dark) .radial-menu-orbit::after {
+    animation: none;
+  }
 }
 :root {
   --bg: #f3f7ff;
@@ -1756,6 +1876,9 @@ footer textarea:focus {
   --body-orb-accent: rgba(47, 118, 210, 0.18);
   --body-orb-warm: rgba(229, 139, 99, 0.18);
   --grid-line: rgba(20, 34, 59, 0.04);
+  --universe-particle-cool: rgba(55, 129, 229, 0.34);
+  --universe-particle-warm: rgba(229, 139, 99, 0.28);
+  --universe-particle-soft: rgba(20, 34, 59, 0.14);
 }
 
 body.theme-dark,
@@ -1796,6 +1919,8 @@ body {
   color: var(--text);
   background: radial-gradient(1100px 500px at 10% -10%, var(--body-orb-accent), transparent 70%), radial-gradient(900px 420px at 90% 0%, var(--body-orb-warm), transparent 72%), var(--bg);
   overflow-x: hidden;
+  position: relative;
+  isolation: isolate;
 }
 
 @supports (overflow: clip) {
@@ -1812,6 +1937,34 @@ body::before {
   background-size: 42px 42px;
   opacity: 0.2;
   z-index: -1;
+}
+
+.universe-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+body:not(.theme-dark) .universe-canvas {
+  opacity: 1;
+}
+
+body.theme-dark .universe-canvas,
+html.theme-dark body .universe-canvas {
+  opacity: 0;
+}
+
+body:not(.theme-dark) header,
+body:not(.theme-dark) section,
+body:not(.theme-dark) footer {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(248, 251, 255, 0.86));
+  backdrop-filter: blur(1.4px);
+  -webkit-backdrop-filter: blur(1.4px);
 }
 
 h1,
@@ -1846,6 +1999,8 @@ ul {
   padding: clamp(1.2rem, 3vw, 2.2rem) 0 clamp(2.5rem, 5vw, 4rem);
   display: grid;
   gap: clamp(1rem, 2.4vw, 1.6rem);
+  position: relative;
+  z-index: 1;
 }
 
 header,
