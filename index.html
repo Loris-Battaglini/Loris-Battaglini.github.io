@@ -1046,7 +1046,7 @@
         if (!state.slider) return;
         const dragThreshold = 12;
         const dragDirectionRatio = 1.25;
-        const swipeStepThreshold = 28;
+        const swipeCommitThreshold = 14;
 
         function beginDrag(pointerId, clientX, clientY) {
           state.dragPointerId = pointerId;
@@ -1054,7 +1054,8 @@
           state.dragStartY = clientY;
           state.dragDirectionLocked = false;
           state.dragIsHorizontal = false;
-          state.dragDeltaX = 0;
+          state.dragActivated = false;
+          state.dragCommittedDirection = 0;
           state.dragSuppressClick = false;
         }
 
@@ -1076,17 +1077,27 @@
 
           nativeEvent.preventDefault();
           state.dragSuppressClick = true;
-          state.dragDeltaX = deltaX;
+
+          if (state.dragActivated || absX < swipeCommitThreshold) return;
+
+          state.dragActivated = true;
+          state.dragCommittedDirection = deltaX < 0 ? 1 : -1;
+          setSliderPaused(state, true, false);
+          if (Math.abs(state.offset) > 0.5) {
+            snapLaneToCenter(state, 0);
+          }
+          syncProjectAnimationLoopState();
         }
 
         function endDrag() {
           if (state.dragPointerId === null) return;
-          const shouldStep = state.dragIsHorizontal && Math.abs(state.dragDeltaX) >= swipeStepThreshold;
-          const direction = state.dragDeltaX < 0 ? 1 : -1;
+          const shouldStep = state.dragActivated && state.dragCommittedDirection !== 0;
+          const direction = state.dragCommittedDirection;
           state.dragPointerId = null;
           state.dragDirectionLocked = false;
           state.dragIsHorizontal = false;
-          state.dragDeltaX = 0;
+          state.dragActivated = false;
+          state.dragCommittedDirection = 0;
 
           if (shouldStep) {
             stepSlider(state, direction);
@@ -1198,7 +1209,8 @@
             dragStartY: 0,
             dragDirectionLocked: false,
             dragIsHorizontal: false,
-            dragDeltaX: 0,
+            dragActivated: false,
+            dragCommittedDirection: 0,
             dragSuppressClick: false,
             lastKnownSliderWidth: 0
           };
