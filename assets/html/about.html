@@ -203,6 +203,12 @@
       const SUPPORTED_LANGUAGES = ['it', 'en'];
       const DEFAULT_LANGUAGE = 'it';
       const PHONE_MEDIA_QUERY = '(max-width: 640px)';
+      const RADIAL_MENU_MEDIA_QUERY = '(max-width: 992px)';
+      const RADIAL_DEBUG_QUERY = 'radialDebug=1';
+      const isRadialDebugEnabled = window.location.search.indexOf(RADIAL_DEBUG_QUERY) !== -1;
+      if (isRadialDebugEnabled) {
+        document.body.classList.add('force-radial-menu');
+      }
       const PAGE_TITLES = {
         it: 'About Me | Loris Battaglini',
         en: 'About Me | Loris Battaglini'
@@ -544,9 +550,58 @@
         };
         const itemCount = radialMenuItems.length;
         const dragStepThreshold = 34;
+        const homeItemIndex = radialMenuItems.findIndex(function (item) {
+          const href = (item.getAttribute('href') || '').toLowerCase();
+          return href === '#top' || href.indexOf('index.html#top') !== -1;
+        });
+        const aboutItemIndex = radialMenuItems.findIndex(function (item) {
+          const href = (item.getAttribute('href') || '').toLowerCase();
+          return href.indexOf('about.html') !== -1 || href === '#top';
+        });
+        const contactsItemIndex = radialMenuItems.findIndex(function (item) {
+          const href = (item.getAttribute('href') || '').toLowerCase();
+          return href.indexOf('#form') !== -1;
+        });
 
         function isPhoneViewport() {
-          return window.matchMedia(PHONE_MEDIA_QUERY).matches;
+          return window.matchMedia(RADIAL_MENU_MEDIA_QUERY).matches || isRadialDebugEnabled;
+        }
+
+        function isRadialToggleVisible() {
+          return window.getComputedStyle(radialMenuToggleButton).display !== 'none';
+        }
+
+        function canUseRadialMenu() {
+          return isPhoneViewport() || isRadialToggleVisible();
+        }
+
+        function isContactSectionInView() {
+          const contactSection = document.querySelector('#form');
+          if (!contactSection) return false;
+          const rect = contactSection.getBoundingClientRect();
+          const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+          const checkpoint = viewportHeight * 0.42;
+          return rect.top <= checkpoint && rect.bottom >= checkpoint;
+        }
+
+        function syncRadialIndexWithContext() {
+          const pathname = window.location.pathname.toLowerCase();
+          const hash = window.location.hash.toLowerCase();
+          const isAboutPage = pathname.indexOf('/about.html') !== -1;
+
+          if (isAboutPage && aboutItemIndex !== -1) {
+            radialState.activeIndex = aboutItemIndex;
+            return;
+          }
+
+          if ((hash === '#form' || isContactSectionInView()) && contactsItemIndex !== -1) {
+            radialState.activeIndex = contactsItemIndex;
+            return;
+          }
+
+          if (homeItemIndex !== -1) {
+            radialState.activeIndex = homeItemIndex;
+          }
         }
 
         function getCssNumber(variableName, fallbackValue) {
@@ -611,13 +666,14 @@
         }
 
         function setRadialMenuOpen(nextOpen) {
-          if (nextOpen && !isPhoneViewport()) return;
+          if (nextOpen && !canUseRadialMenu()) return;
           radialState.isOpen = Boolean(nextOpen);
           document.body.classList.toggle('radial-menu-open', radialState.isOpen);
           radialMenuToggleButton.setAttribute('aria-expanded', String(radialState.isOpen));
           radialMenuPanel.setAttribute('aria-hidden', String(!radialState.isOpen));
 
           if (radialState.isOpen) {
+            syncRadialIndexWithContext();
             syncWheelGeometry();
             radialState.wheelAccumulator = 0;
             radialState.hasSteppedInDrag = false;
@@ -652,12 +708,15 @@
 
         radialMenuShell.addEventListener('pointerdown', function (event) {
           if (!radialState.isOpen) return;
+          if (event.pointerType === 'mouse') return;
           radialState.isDragging = true;
           radialState.pointerId = event.pointerId;
           radialState.dragStartY = event.clientY;
           radialState.hasSteppedInDrag = false;
           radialState.suppressBackgroundTap = false;
-          radialMenuShell.setPointerCapture(event.pointerId);
+          if (typeof radialMenuShell.setPointerCapture === 'function') {
+            radialMenuShell.setPointerCapture(event.pointerId);
+          }
         });
 
         radialMenuShell.addEventListener('pointermove', function (event) {
@@ -677,7 +736,13 @@
           radialState.pointerId = null;
           radialState.dragStartY = 0;
           radialState.hasSteppedInDrag = false;
-          radialMenuShell.releasePointerCapture(event.pointerId);
+          if (
+            typeof radialMenuShell.hasPointerCapture === 'function' &&
+            radialMenuShell.hasPointerCapture(event.pointerId) &&
+            typeof radialMenuShell.releasePointerCapture === 'function'
+          ) {
+            radialMenuShell.releasePointerCapture(event.pointerId);
+          }
         });
 
         radialMenuShell.addEventListener('pointercancel', function (event) {
@@ -755,7 +820,7 @@
         });
 
         window.addEventListener('resize', function () {
-          if (!isPhoneViewport() && radialState.isOpen) {
+          if (!canUseRadialMenu() && radialState.isOpen) {
             setRadialMenuOpen(false);
             return;
           }
@@ -773,6 +838,7 @@
         }, { passive: true });
 
         syncWheelGeometry();
+        syncRadialIndexWithContext();
         renderWheel();
       }
 

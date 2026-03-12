@@ -520,6 +520,10 @@ body.radial-menu-open header {
   .has-radial-menu .header-nav {
     display: none;
   }
+  .has-radial-menu .radial-menu-toggle {
+    display: inline-flex;
+    z-index: 2147483646;
+  }
   .has-radial-menu .header-nav-row {
     flex-wrap: nowrap;
     row-gap: 0;
@@ -531,6 +535,12 @@ body.radial-menu-open header {
     margin-left: auto;
   }
 }
+
+.has-radial-menu.force-radial-menu .radial-menu-toggle {
+  display: inline-flex;
+  z-index: 2147483646;
+}
+
 @media (max-width: 640px) {
   .has-radial-menu .header-nav-row {
     flex-wrap: nowrap;
