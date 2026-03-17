@@ -483,16 +483,55 @@ body.radial-menu-open header {
 }
 
 .img-container-header {
+  --home-photo-shape: 58% 42% 50% 50% / 44% 46% 54% 56%;
   width: min(100%, 420px);
+  aspect-ratio: 4 / 5;
+  position: relative;
+  display: grid;
+  place-items: end center;
+  isolation: isolate;
+}
+
+.img-container-header::before,
+.img-container-header::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+}
+
+.img-container-header::before {
+  inset: 12% 10% 12% 10%;
+  border-radius: var(--home-photo-shape);
+  background: linear-gradient(155deg, rgba(20, 34, 59, 0.14), rgba(20, 34, 59, 0.3));
+  box-shadow: 0 20px 34px rgba(20, 34, 59, 0.24);
+  z-index: 0;
+}
+
+.img-container-header::after {
+  width: 80%;
+  height: 80%;
+  left: 50%;
+  top: 12%;
+  transform: translateX(-43%) rotate(-8deg);
+  border-radius: var(--home-photo-shape);
+  border: 1px solid rgba(47, 118, 210, 0.3);
+  z-index: 1;
+}
+
+.home-hero-cutout-media {
+  width: 118%;
+  max-width: 470px;
+  transform: translateX(-1%) translateY(1%);
+  position: relative;
+  z-index: 2;
 }
 
 .foto-loris {
   width: 100%;
-  aspect-ratio: 4 / 5;
-  object-fit: cover;
-  border-radius: 1rem;
-  border: 1px solid var(--line);
-  box-shadow: 0 18px 30px rgba(20, 34, 59, 0.16);
+  height: auto;
+  object-fit: contain;
+  object-position: center bottom;
+  filter: drop-shadow(0 18px 30px rgba(20, 34, 59, 0.24));
 }
 
 @media (max-width: 992px) {
@@ -516,6 +555,15 @@ body.radial-menu-open header {
 
   .right-container-header {
     justify-content: flex-start;
+  }
+
+  .img-container-header {
+    width: min(100%, 336px);
+  }
+
+  .home-hero-cutout-media {
+    width: 112%;
+    max-width: 390px;
   }
 }
 
