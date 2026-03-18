@@ -154,7 +154,6 @@
       const themeToggleButton = document.querySelector('#theme-toggle');
       const themeToggleIcon = themeToggleButton ? themeToggleButton.querySelector('i') : null;
       const languageOptionButtons = Array.from(document.querySelectorAll('[data-language-option]'));
-      const heroProfileImage = document.querySelector('.foto-loris');
       const universeCanvas = document.querySelector('#universe-canvas');
       const reducedMotionQuery = typeof window.matchMedia === 'function'
         ? window.matchMedia('(prefers-reduced-motion: reduce)')
@@ -179,10 +178,6 @@
       let projectResizeFrameId = 0;
       let currentLanguage = DEFAULT_LANGUAGE;
       let isFormSubmitting = false;
-      const HERO_PROFILE_IMAGE_BY_LANGUAGE = {
-        it: 'assets/img/foto-loris-scelte/sfondo-blu-vetro.png',
-        en: 'assets/img/foto-loris-scelte/sfondo-vetro-eng-all.png'
-      };
 
       const universeState = {
         isSetup: false,
@@ -430,13 +425,6 @@
           if (!key) return;
           node.setAttribute('alt', getTranslatedAlt(key));
         });
-
-        if (heroProfileImage) {
-          heroProfileImage.setAttribute(
-            'src',
-            HERO_PROFILE_IMAGE_BY_LANGUAGE[currentLanguage] || HERO_PROFILE_IMAGE_BY_LANGUAGE.it
-          );
-        }
 
         languageOptionButtons.forEach(function (button) {
           const isActive = button.dataset.lang === currentLanguage;
