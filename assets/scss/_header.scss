@@ -500,7 +500,7 @@ body.radial-menu-open header {
 }
 
 .img-container-header::before {
-  inset: 12% 10% 12% 10%;
+  inset: 4.8% 8% 10% 8%;
   border-radius: var(--home-photo-shape);
   background: linear-gradient(155deg, rgba(20, 34, 59, 0.14), rgba(20, 34, 59, 0.3));
   box-shadow: 0 20px 34px rgba(20, 34, 59, 0.24);
@@ -508,22 +508,26 @@ body.radial-menu-open header {
 }
 
 .img-container-header::after {
-  width: 80%;
-  height: 80%;
+  width: 82%;
+  height: 82%;
   left: 50%;
-  top: 12%;
-  transform: translateX(-43%) rotate(-8deg);
+  top: 10%;
+  transform: translateX(-43%) rotate(-7deg);
   border-radius: var(--home-photo-shape);
   border: 1px solid rgba(47, 118, 210, 0.3);
+  box-shadow: 0 10px 24px rgba(47, 118, 210, 0.16);
   z-index: 1;
 }
 
 .home-hero-cutout-media {
-  width: 118%;
+  width: 116%;
   max-width: 470px;
-  transform: translateX(-1%) translateY(1%);
+  transform: translateX(-1%) translateY(1.4%);
   position: relative;
   z-index: 2;
+  overflow: hidden;
+  clip-path: inset(4.8% 8% 10% 8% round var(--home-photo-shape));
+  -webkit-clip-path: inset(4.8% 8% 10% 8% round var(--home-photo-shape));
 }
 
 .foto-loris {
@@ -531,7 +535,9 @@ body.radial-menu-open header {
   height: auto;
   object-fit: contain;
   object-position: center bottom;
-  filter: drop-shadow(0 18px 30px rgba(20, 34, 59, 0.24));
+  transform: translateY(1.35%) scale(1.08);
+  transform-origin: center bottom;
+  filter: drop-shadow(0 18px 28px rgba(20, 34, 59, 0.22));
 }
 
 @media (max-width: 992px) {
@@ -558,12 +564,13 @@ body.radial-menu-open header {
   }
 
   .img-container-header {
-    width: min(100%, 336px);
+    width: min(100%, 344px);
   }
 
   .home-hero-cutout-media {
     width: 112%;
     max-width: 390px;
+    transform: translateX(-0.8%) translateY(1.4%);
   }
 }
 
