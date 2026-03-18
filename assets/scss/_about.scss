@@ -272,10 +272,16 @@
   margin: 0;
   display: grid;
   gap: 0.65rem;
+  width: min(100%, 380px);
+  justify-self: center;
 }
 
 .about-before-after-media {
   --reveal: 50%;
+  --compare-scale: 1.42;
+  --compare-position-y: 22%;
+  --compare-offset-before: 1.4%;
+  --compare-offset-after: -1.4%;
   position: relative;
   aspect-ratio: 4 / 5;
   border: 1px solid var(--line);
@@ -290,11 +296,29 @@
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: 50% var(--compare-position-y);
+  padding: clamp(0.1rem, 0.45vw, 0.35rem);
+  filter: drop-shadow(0 16px 24px rgba(8, 18, 36, 0.24));
+  pointer-events: none;
+  transform-origin: center top;
+  transform: translate3d(var(--compare-offset, 0), 0, 0) scale(var(--compare-scale));
+  backface-visibility: hidden;
+  will-change: transform, clip-path;
 }
 
 .about-photo-before {
+  --compare-offset: var(--compare-offset-before);
+  z-index: 2;
   clip-path: inset(0 calc(100% - var(--reveal)) 0 0);
+  -webkit-clip-path: inset(0 calc(100% - var(--reveal)) 0 0);
+}
+
+.about-photo-after {
+  --compare-offset: var(--compare-offset-after);
+  z-index: 1;
+  clip-path: inset(0 0 0 var(--reveal));
+  -webkit-clip-path: inset(0 0 0 var(--reveal));
 }
 
 .about-before-after-divider {
@@ -307,6 +331,7 @@
   transform: translateX(-50%);
   box-shadow: 0 0 0 1px rgba(20, 34, 59, 0.12);
   pointer-events: none;
+  z-index: 5;
 }
 
 .about-before-after-divider::after {
@@ -335,6 +360,7 @@
   height: 100%;
   opacity: 0;
   cursor: ew-resize;
+  z-index: 4;
 }
 
 .about-before-after-hint {
@@ -349,6 +375,7 @@
   font-weight: 700;
   line-height: 1;
   pointer-events: none;
+  z-index: 6;
 }
 
 .about-before-label {
@@ -486,8 +513,13 @@
   }
 
   .about-before-after {
-    width: min(100%, 300px);
+    width: min(100%, 340px);
     margin-inline: auto;
+  }
+
+  .about-before-after-media {
+    --compare-scale: 1.34;
+    --compare-position-y: 20%;
   }
 }
 
@@ -510,12 +542,16 @@
   }
 
   .about-before-after {
-    width: min(100%, 220px);
+    width: min(100%, 260px);
     margin-inline: auto;
   }
 
   .about-before-after-media {
-    aspect-ratio: 3 / 4;
+    aspect-ratio: 4 / 5;
+    --compare-scale: 1.24;
+    --compare-position-y: 18%;
+    --compare-offset-before: 1%;
+    --compare-offset-after: -1%;
   }
 
   .about-contact-link {
