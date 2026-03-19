@@ -272,6 +272,21 @@
   padding-top: clamp(1.7rem, 3.5vw, 2.4rem);
 }
 
+.about-shell .about-manifesto,
+.about-shell .about-section-mentality {
+  border: 0;
+  border-top: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.about-shell .about-section-mentality {
+  padding-top: clamp(1.2rem, 2.8vw, 2rem);
+}
+
 .about-before-after {
   margin: 0;
   display: grid;
