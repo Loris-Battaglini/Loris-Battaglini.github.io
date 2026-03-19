@@ -942,10 +942,11 @@
         return Number.isNaN(gap) ? 0 : gap;
       }
 
-      function getLaneEdgeOffset(state) {
-        const rawEdgeOffset = window.getComputedStyle(state.lane).getPropertyValue('--edge-offset');
-        const edgeOffset = Number.parseFloat(rawEdgeOffset);
-        return Number.isNaN(edgeOffset) ? 0 : edgeOffset;
+      // Keep slider metrics in state to avoid repeated style reads during animation.
+      function updateSliderLayoutMetrics(state) {
+        state.laneGap = getLaneGap(state.lane);
+        updateSliderEdgeOffset(state);
+        updateSliderSpeed(state);
       }
 
       function ensureMinimumCards(lane, slider) {
@@ -982,7 +983,8 @@
       }
 
       function getCardStep(card, state) {
-        return card.getBoundingClientRect().width + getLaneGap(state.lane);
+        const laneGap = typeof state.laneGap === 'number' ? state.laneGap : getLaneGap(state.lane);
+        return card.getBoundingClientRect().width + laneGap;
       }
 
       function applyLaneTransform(state) {
@@ -994,7 +996,7 @@
         if (cards.length === 0) return;
 
         const firstCard = cards[0];
-        const gap = getLaneGap(state.lane);
+        const gap = typeof state.laneGap === 'number' ? state.laneGap : getLaneGap(state.lane);
         const cardsTotalWidth = cards.reduce(function (sum, card) {
           return sum + card.getBoundingClientRect().width;
         }, 0);
@@ -1007,6 +1009,7 @@
           : Math.min(laneNaturalWidth, sliderWidth);
         const edgeOffset = Math.max(0, (sliderWidth - targetWidth) / 2);
 
+        state.edgeOffset = edgeOffset;
         state.lane.style.setProperty('--edge-offset', edgeOffset + 'px');
       }
 
@@ -1019,7 +1022,7 @@
         let firstCard = state.lane.firstElementChild;
         while (firstCard) {
           const step = getCardStep(firstCard, state);
-          const recycleThreshold = step + getLaneEdgeOffset(state);
+          const recycleThreshold = step + (state.edgeOffset || 0);
           if (-state.offset < recycleThreshold) break;
           state.offset += step;
           state.lane.appendChild(firstCard);
@@ -1216,6 +1219,8 @@
             isManualAnimating: false,
             isVisible: false,
             offset: 0,
+            laneGap: 0,
+            edgeOffset: 0,
             speed: 0.045
           };
 
@@ -1231,8 +1236,7 @@
             setSliderPaused(state, !state.isAutoPaused, true);
           });
 
-          updateSliderEdgeOffset(state);
-          updateSliderSpeed(state);
+          updateSliderLayoutMetrics(state);
           applyLaneTransform(state);
           projectSliderStates.push(state);
         });
@@ -1244,8 +1248,7 @@
           projectResizeFrameId = window.requestAnimationFrame(function () {
             projectResizeFrameId = 0;
             projectSliderStates.forEach(function (state) {
-              updateSliderEdgeOffset(state);
-              updateSliderSpeed(state);
+              updateSliderLayoutMetrics(state);
               snapLaneToCenter(state, 0);
               applyLaneTransform(state);
             });
@@ -1265,7 +1268,7 @@
           setupProjectSliders();
           projectSliderStates.forEach(function (state) {
             state.isVisible = true;
-            updateSliderEdgeOffset(state);
+            updateSliderLayoutMetrics(state);
             snapLaneToCenter(state, 0);
             applyLaneTransform(state);
           });
@@ -1410,6 +1413,27 @@
           return phoneViewportQuery ? phoneViewportQuery.matches : window.innerWidth <= 767;
         }
 
+        function trySetPointerCapture(pointerId) {
+          if (typeof radialMenuShell.setPointerCapture !== 'function') return;
+          try {
+            radialMenuShell.setPointerCapture(pointerId);
+          } catch (error) {
+            // Some browsers may reject pointer capture if pointer state changes quickly.
+          }
+        }
+
+        function tryReleasePointerCapture(pointerId) {
+          if (typeof radialMenuShell.releasePointerCapture !== 'function') return;
+          if (typeof radialMenuShell.hasPointerCapture === 'function' && !radialMenuShell.hasPointerCapture(pointerId)) {
+            return;
+          }
+          try {
+            radialMenuShell.releasePointerCapture(pointerId);
+          } catch (error) {
+            // Ignore capture-release errors to prevent interaction crashes.
+          }
+        }
+
         function getCssNumber(variableName, fallbackValue) {
           const rawValue = window.getComputedStyle(radialMenuOrbit).getPropertyValue(variableName);
           const parsedValue = Number.parseFloat(rawValue);
@@ -1489,6 +1513,9 @@
             return;
           }
 
+          if (radialState.pointerId !== null) {
+            tryReleasePointerCapture(radialState.pointerId);
+          }
           radialState.isDragging = false;
           radialState.pointerId = null;
         }
@@ -1519,7 +1546,7 @@
           radialState.dragStartY = event.clientY;
           radialState.hasSteppedInDrag = false;
           radialState.suppressBackgroundTap = false;
-          radialMenuShell.setPointerCapture(event.pointerId);
+          trySetPointerCapture(event.pointerId);
         });
 
         radialMenuShell.addEventListener('pointermove', function (event) {
@@ -1540,7 +1567,7 @@
           radialState.pointerId = null;
           radialState.dragStartY = 0;
           radialState.hasSteppedInDrag = false;
-          radialMenuShell.releasePointerCapture(event.pointerId);
+          tryReleasePointerCapture(event.pointerId);
         });
 
         radialMenuShell.addEventListener('pointercancel', function (event) {
@@ -1686,6 +1713,29 @@
         formSubmitButton.textContent = isSubmitting ? getDynamicString('formSubmittingButton') : getDynamicString('formSubmitButton');
       }
 
+      const EMAILJS_PLACEHOLDER_VALUES = {
+        publicKey: 'YOUR_EMAILJS_PUBLIC_KEY',
+        serviceId: 'YOUR_EMAILJS_SERVICE_ID',
+        templateId: 'YOUR_EMAILJS_TEMPLATE_ID',
+        autoReplyTemplateId: 'YOUR_EMAILJS_AUTOREPLY_TEMPLATE_ID'
+      };
+
+      // Resolve URLs defensively to prevent malformed dataset values from breaking form flow.
+      function resolveSafeHttpUrl(rawUrl, fallbackUrl) {
+        try {
+          const fallback = new URL(fallbackUrl, window.location.href);
+          const candidateText = typeof rawUrl === 'string' ? rawUrl.trim() : '';
+          if (!candidateText) return fallback.href;
+          const candidate = new URL(candidateText, window.location.href);
+          if (candidate.protocol !== 'http:' && candidate.protocol !== 'https:') {
+            return fallback.href;
+          }
+          return candidate.href;
+        } catch (error) {
+          return new URL(fallbackUrl, window.location.href).href;
+        }
+      }
+
       function getEmailJsConfig(form) {
         const fallbackChecklistUrl = new URL('assets/files/checklist-placeholder.txt', window.location.href).href;
         const checklistUrlIt = form.dataset.checklistUrl || fallbackChecklistUrl;
@@ -1703,14 +1753,19 @@
         };
       }
 
-      function buildTemplateParams(form) {
-        const nameField = form.querySelector('#text');
-        const emailField = form.querySelector('#email');
-        const messageField = form.querySelector('#message');
-        const checklistField = form.querySelector('#lead-magnet');
+      function getContactFormFields(form) {
+        return {
+          nameField: form.querySelector('#text'),
+          emailField: form.querySelector('#email'),
+          messageField: form.querySelector('#message'),
+          checklistField: form.querySelector('#lead-magnet'),
+          honeypotField: form.querySelector('#website')
+        };
+      }
 
-        const contactName = nameField ? nameField.value.trim() : '';
-        const checklistRequested = Boolean(checklistField && checklistField.checked);
+      function buildTemplateParams(fields) {
+        const contactName = fields.nameField ? fields.nameField.value.trim() : '';
+        const checklistRequested = Boolean(fields.checklistField && fields.checklistField.checked);
         const checklistValue = checklistRequested ? 'yes' : 'no';
         const wantsChecklistLabel = currentLanguage === 'en'
           ? (checklistRequested ? 'Yes' : 'No')
@@ -1752,8 +1807,8 @@
 
         return {
           from_name: contactName,
-          reply_to: emailField ? emailField.value.trim() : '',
-          message: messageField ? messageField.value.trim() : '',
+          reply_to: fields.emailField ? fields.emailField.value.trim() : '',
+          message: fields.messageField ? fields.messageField.value.trim() : '',
           wants_checklist: wantsChecklistLabel,
           wants_checklist_value: checklistValue,
           wants_checklist_label: wantsChecklistLabel,
@@ -1769,14 +1824,26 @@
           auto_reply_download_cta: autoReplyCopy.downloadCta,
           auto_reply_footer: autoReplyCopy.footer,
           to_name: contactName,
-          to_email: emailField ? emailField.value.trim() : ''
+          to_email: fields.emailField ? fields.emailField.value.trim() : ''
         };
+      }
+
+      function isMissingEmailJsConfig(config) {
+        return (
+          !config.publicKey ||
+          !config.serviceId ||
+          !config.templateId ||
+          config.publicKey === EMAILJS_PLACEHOLDER_VALUES.publicKey ||
+          config.serviceId === EMAILJS_PLACEHOLDER_VALUES.serviceId ||
+          config.templateId === EMAILJS_PLACEHOLDER_VALUES.templateId
+        );
       }
 
       function setupContactForm() {
         if (!contactForm) return;
+        const formFields = getContactFormFields(contactForm);
 
-        contactForm.addEventListener('submit', function (event) {
+        contactForm.addEventListener('submit', async function (event) {
           event.preventDefault();
           setFormStatus('', false);
 
@@ -1785,26 +1852,24 @@
             return;
           }
 
-          const honeypotField = contactForm.querySelector('#website');
-          if (honeypotField && honeypotField.value.trim() !== '') {
-            window.location.href = 'assets/html/form-success.html';
+          const config = getEmailJsConfig(contactForm);
+          const safeSuccessUrl = resolveSafeHttpUrl(config.successUrl, 'assets/html/form-success.html');
+
+          if (formFields.honeypotField && formFields.honeypotField.value.trim() !== '') {
+            window.location.href = safeSuccessUrl;
             return;
           }
 
-          if (!window.emailjs || typeof window.emailjs.send !== 'function') {
+          if (
+            !window.emailjs ||
+            typeof window.emailjs.send !== 'function' ||
+            typeof window.emailjs.init !== 'function'
+          ) {
             setFormStatus(getDynamicString('formServiceUnavailable'), true);
             return;
           }
 
-          const config = getEmailJsConfig(contactForm);
-          if (
-            !config.publicKey ||
-            !config.serviceId ||
-            !config.templateId ||
-            config.publicKey === 'YOUR_EMAILJS_PUBLIC_KEY' ||
-            config.serviceId === 'YOUR_EMAILJS_SERVICE_ID' ||
-            config.templateId === 'YOUR_EMAILJS_TEMPLATE_ID'
-          ) {
+          if (isMissingEmailJsConfig(config)) {
             setFormStatus(getDynamicString('formConfigMissing'), true);
             return;
           }
@@ -1815,37 +1880,34 @@
           }
 
           setFormSubmitting(true);
+          try {
+            window.emailjs.init({ publicKey: config.publicKey });
+            const templateParams = buildTemplateParams(formFields);
+            const checklistFallbackUrl = 'assets/files/checklist-placeholder.txt';
+            templateParams.checklist_url = resolveSafeHttpUrl(config.checklistUrl, checklistFallbackUrl);
+            templateParams.checklist_url_it = resolveSafeHttpUrl(config.checklistUrlIt, templateParams.checklist_url);
+            templateParams.checklist_url_en = resolveSafeHttpUrl(config.checklistUrlEn, templateParams.checklist_url_it);
 
-          window.emailjs.init({ publicKey: config.publicKey });
-          const templateParams = buildTemplateParams(contactForm);
-          templateParams.checklist_url = new URL(config.checklistUrl, window.location.href).href;
-          templateParams.checklist_url_it = new URL(config.checklistUrlIt, window.location.href).href;
-          templateParams.checklist_url_en = new URL(config.checklistUrlEn, window.location.href).href;
+            await window.emailjs.send(config.serviceId, config.templateId, templateParams);
 
-          window.emailjs
-            .send(config.serviceId, config.templateId, templateParams)
-            .then(function () {
-              const selectedAutoReplyTemplateId = templateParams.preferred_language === 'en'
-                ? (config.autoReplyTemplateIdEn || config.autoReplyTemplateId)
-                : config.autoReplyTemplateId;
-              const autoReplyConfigured = selectedAutoReplyTemplateId && selectedAutoReplyTemplateId !== 'YOUR_EMAILJS_AUTOREPLY_TEMPLATE_ID';
+            const selectedAutoReplyTemplateId = templateParams.preferred_language === 'en'
+              ? (config.autoReplyTemplateIdEn || config.autoReplyTemplateId)
+              : config.autoReplyTemplateId;
+            const autoReplyConfigured = selectedAutoReplyTemplateId &&
+              selectedAutoReplyTemplateId !== EMAILJS_PLACEHOLDER_VALUES.autoReplyTemplateId;
 
-              if (!autoReplyConfigured) {
-                throw new Error('Template auto-reply non configurato');
-              }
+            if (!autoReplyConfigured) {
+              throw new Error('Template auto-reply non configurato');
+            }
 
-              return window.emailjs.send(config.serviceId, selectedAutoReplyTemplateId, templateParams);
-            })
-            .then(function () {
-              window.location.href = config.successUrl;
-            })
-            .catch(function (error) {
-              const errorText = error && (error.text || error.message) ? ' (' + (error.text || error.message) + ')' : '';
-              setFormStatus(getDynamicString('formSubmitErrorPrefix') + errorText, true);
-            })
-            .finally(function () {
-              setFormSubmitting(false);
-            });
+            await window.emailjs.send(config.serviceId, selectedAutoReplyTemplateId, templateParams);
+            window.location.href = safeSuccessUrl;
+          } catch (error) {
+            const errorText = error && (error.text || error.message) ? ' (' + (error.text || error.message) + ')' : '';
+            setFormStatus(getDynamicString('formSubmitErrorPrefix') + errorText, true);
+          } finally {
+            setFormSubmitting(false);
+          }
         });
       }
 
