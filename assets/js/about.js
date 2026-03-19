@@ -905,6 +905,27 @@
           return phoneViewportQuery ? phoneViewportQuery.matches : window.innerWidth <= 767;
         }
 
+        function trySetPointerCapture(pointerId) {
+          if (typeof radialMenuShell.setPointerCapture !== 'function') return;
+          try {
+            radialMenuShell.setPointerCapture(pointerId);
+          } catch (error) {
+            // Ignore capture errors to keep touch navigation stable.
+          }
+        }
+
+        function tryReleasePointerCapture(pointerId) {
+          if (typeof radialMenuShell.releasePointerCapture !== 'function') return;
+          if (typeof radialMenuShell.hasPointerCapture === 'function' && !radialMenuShell.hasPointerCapture(pointerId)) {
+            return;
+          }
+          try {
+            radialMenuShell.releasePointerCapture(pointerId);
+          } catch (error) {
+            // Pointer could already be released by the browser.
+          }
+        }
+
         function getCssNumber(variableName, fallbackValue) {
           const rawValue = window.getComputedStyle(radialMenuOrbit).getPropertyValue(variableName);
           const parsedValue = Number.parseFloat(rawValue);
@@ -984,6 +1005,9 @@
             return;
           }
 
+          if (radialState.pointerId !== null) {
+            tryReleasePointerCapture(radialState.pointerId);
+          }
           radialState.isDragging = false;
           radialState.pointerId = null;
         }
@@ -1014,7 +1038,7 @@
           radialState.dragStartY = event.clientY;
           radialState.hasSteppedInDrag = false;
           radialState.suppressBackgroundTap = false;
-          radialMenuShell.setPointerCapture(event.pointerId);
+          trySetPointerCapture(event.pointerId);
         });
 
         radialMenuShell.addEventListener('pointermove', function (event) {
@@ -1035,7 +1059,7 @@
           radialState.pointerId = null;
           radialState.dragStartY = 0;
           radialState.hasSteppedInDrag = false;
-          radialMenuShell.releasePointerCapture(event.pointerId);
+          tryReleasePointerCapture(event.pointerId);
         });
 
         radialMenuShell.addEventListener('pointercancel', function (event) {

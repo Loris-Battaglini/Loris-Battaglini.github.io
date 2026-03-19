@@ -135,6 +135,29 @@ footer {
   transition: box-shadow 0.45s ease, border-color 0.45s ease;
 }
 
+@media (min-width: 993px) {
+  html:not(.theme-dark) body header {
+    background: linear-gradient(
+      102deg,
+      color-mix(in srgb, var(--surface) 96%, transparent) 0%,
+      color-mix(in srgb, var(--surface-strong) 92%, transparent) 60%,
+      color-mix(in srgb, var(--surface-strong) 35%, transparent) 75%,
+      transparent 90%
+    );
+  }
+
+  body.theme-dark header,
+  html.theme-dark body header {
+    background: linear-gradient(
+      102deg,
+      rgba(16, 32, 58, 0.9) 0%,
+      rgba(10, 24, 46, 0.84) 60%,
+      rgba(10, 24, 46, 0.34) 76%,
+      rgba(10, 24, 46, 0.06) 92%
+    );
+  }
+}
+
 // Temporary focus class added by JS after anchor navigation.
 .section-focus {
   border-color: rgba(47, 118, 210, 0.62);
