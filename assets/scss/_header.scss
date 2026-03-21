@@ -8,9 +8,9 @@ header::after {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(420px 250px at 84% 54%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 72%),
-    radial-gradient(320px 210px at 70% 84%, color-mix(in srgb, var(--accent-2) 8%, transparent), transparent 74%);
-  opacity: 0.72;
+    radial-gradient(420px 250px at 84% 54%, color-mix(in srgb, var(--accent) 7%, transparent), transparent 72%),
+    radial-gradient(320px 210px at 70% 84%, color-mix(in srgb, var(--accent-2) 5%, transparent), transparent 74%);
+  opacity: 0.56;
   pointer-events: none;
 }
 
@@ -490,18 +490,21 @@ body.radial-menu-open header {
 
 .right-container-header {
   --home-photo-shape: 69% 31% 61% 39% / 42% 66% 34% 58%;
-  --hero-shell-highlight: rgba(255, 255, 255, 0.44);
-  --hero-shell-cool: rgba(54, 123, 212, 0.16);
-  --hero-shell-warm: rgba(229, 139, 99, 0.12);
-  --hero-shell-border: rgba(47, 118, 210, 0.26);
-  --hero-shell-shadow: rgba(20, 34, 59, 0.13);
-  --hero-backdrop-cool: rgba(54, 123, 212, 0.11);
-  --hero-backdrop-warm: rgba(229, 139, 99, 0.08);
-  --hero-portrait-glow: rgba(255, 255, 255, 0.28);
-  --hero-portrait-glow-cool: rgba(54, 123, 212, 0.16);
-  --hero-ground-shadow: rgba(16, 28, 54, 0.24);
-  --hero-ground-fade: rgba(16, 28, 54, 0.1);
-  --hero-photo-shadow: rgba(17, 31, 52, 0.24);
+  --hero-shell-highlight: rgba(255, 255, 255, 0.36);
+  --hero-shell-cool: rgba(54, 123, 212, 0.11);
+  --hero-shell-warm: rgba(229, 139, 99, 0.08);
+  --hero-shell-border: rgba(47, 118, 210, 0.2);
+  --hero-shell-shadow: rgba(20, 34, 59, 0.09);
+  --hero-backdrop-cool: rgba(54, 123, 212, 0.07);
+  --hero-backdrop-warm: rgba(229, 139, 99, 0.05);
+  --hero-portrait-glow: rgba(255, 255, 255, 0.23);
+  --hero-portrait-glow-cool: rgba(54, 123, 212, 0.12);
+  --hero-ground-shadow: rgba(16, 28, 54, 0.18);
+  --hero-ground-fade: rgba(16, 28, 54, 0.06);
+  --hero-photo-shadow: rgba(17, 31, 52, 0.16);
+  --hero-photo-brightness: 1.06;
+  --hero-photo-saturate: 0.96;
+  --hero-photo-contrast: 0.95;
   --hero-photo-wrap-scale: 1.28;
   --hero-photo-wrap-x: -1.65%;
   --hero-photo-wrap-y: 0.55%;
@@ -536,6 +539,9 @@ html.theme-dark .right-container-header {
   --hero-ground-shadow: rgba(4, 11, 23, 0.52);
   --hero-ground-fade: rgba(4, 11, 23, 0.22);
   --hero-photo-shadow: rgba(1, 7, 18, 0.52);
+  --hero-photo-brightness: 1;
+  --hero-photo-saturate: 1.03;
+  --hero-photo-contrast: 1.02;
 }
 
 .right-container-header::before {
@@ -606,6 +612,41 @@ html.theme-dark .right-container-header {
   z-index: 1;
 }
 
+html:not(.theme-dark) .right-container-header,
+body:not(.theme-dark) .right-container-header {
+  --hero-shell-highlight: rgba(255, 255, 255, 0.48);
+  --hero-shell-cool: rgba(72, 137, 220, 0.17);
+  --hero-shell-warm: rgba(126, 144, 228, 0.09);
+  --hero-shell-border: rgba(63, 129, 219, 0.42);
+  --hero-shell-shadow: rgba(20, 34, 59, 0.1);
+  --hero-backdrop-cool: rgba(72, 137, 220, 0.12);
+  --hero-backdrop-warm: rgba(126, 144, 228, 0.07);
+  --hero-portrait-glow: rgba(255, 255, 255, 0.27);
+  --hero-portrait-glow-cool: rgba(90, 149, 231, 0.18);
+  --hero-ground-shadow: rgba(20, 38, 71, 0.18);
+  --hero-ground-fade: rgba(20, 38, 71, 0.065);
+  --hero-photo-shadow: rgba(17, 31, 52, 0.12);
+  --hero-photo-brightness: 1.1;
+  --hero-photo-saturate: 0.92;
+  --hero-photo-contrast: 0.92;
+}
+
+html:not(.theme-dark) .right-container-header::before,
+body:not(.theme-dark) .right-container-header::before {
+  border-width: 1.2px;
+}
+
+html:not(.theme-dark) .right-container-header::after,
+body:not(.theme-dark) .right-container-header::after {
+  opacity: 0.58;
+  filter: blur(12px);
+}
+
+html:not(.theme-dark) .img-container-header::after,
+body:not(.theme-dark) .img-container-header::after {
+  opacity: 0.4;
+}
+
 .home-hero-cutout-media {
   width: calc(var(--hero-photo-wrap-scale) * 100%);
   max-width: 530px;
@@ -626,7 +667,7 @@ html.theme-dark .right-container-header {
   object-position: center bottom;
   transform: translateY(var(--hero-photo-y)) scale(var(--hero-photo-scale));
   transform-origin: center bottom;
-  filter: drop-shadow(0 16px 26px var(--hero-photo-shadow)) saturate(1.03) contrast(1.02);
+  filter: drop-shadow(0 16px 26px var(--hero-photo-shadow)) brightness(var(--hero-photo-brightness)) saturate(var(--hero-photo-saturate)) contrast(var(--hero-photo-contrast));
 }
 
 @media (max-width: 992px) {
