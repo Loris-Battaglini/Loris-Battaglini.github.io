@@ -240,3 +240,125 @@ footer {
 summary {
   margin-top: 10px;
 }
+
+body.theme-dark .language-option.is-active,
+html.theme-dark body .language-option.is-active {
+  background: linear-gradient(122deg, #2e6ed1 0%, #3197f1 55%, #58beff 100%);
+  box-shadow: 0 7px 14px rgba(7, 18, 38, 0.42), 0 0 8px rgba(70, 154, 255, 0.3);
+}
+
+body.theme-dark .contattami-header,
+body.theme-dark .btn-cv,
+body.theme-dark .project-card .btn-primary,
+body.theme-dark .projects-more-link,
+body.theme-dark .metodo-cta-link,
+body.theme-dark .about-contact-link,
+body.theme-dark .btn-footer,
+html.theme-dark body .contattami-header,
+html.theme-dark body .btn-cv,
+html.theme-dark body .project-card .btn-primary,
+html.theme-dark body .projects-more-link,
+html.theme-dark body .metodo-cta-link,
+html.theme-dark body .about-contact-link,
+html.theme-dark body .btn-footer {
+  color: #f7fbff;
+  border-color: rgba(129, 184, 255, 0.44);
+  background: linear-gradient(122deg, #2c67c7 0%, #2f8ae4 52%, #4eb7ff 100%);
+  box-shadow:
+    0 10px 18px rgba(6, 17, 35, 0.44),
+    0 0 10px rgba(70, 154, 255, 0.28),
+    inset 0 1px 0 rgba(208, 228, 255, 0.22);
+}
+
+body.theme-dark .contattami-header:hover,
+body.theme-dark .btn-cv:hover,
+body.theme-dark .project-card .btn-primary:hover,
+body.theme-dark .projects-more-link:hover,
+body.theme-dark .metodo-cta-link:hover,
+body.theme-dark .about-contact-link:hover,
+body.theme-dark .btn-footer:hover,
+html.theme-dark body .contattami-header:hover,
+html.theme-dark body .btn-cv:hover,
+html.theme-dark body .project-card .btn-primary:hover,
+html.theme-dark body .projects-more-link:hover,
+html.theme-dark body .metodo-cta-link:hover,
+html.theme-dark body .about-contact-link:hover,
+html.theme-dark body .btn-footer:hover {
+  box-shadow:
+    0 12px 22px rgba(5, 15, 31, 0.5),
+    0 0 12px rgba(78, 173, 255, 0.36),
+    inset 0 1px 0 rgba(223, 239, 255, 0.28);
+}
+
+body.theme-dark .about-link-header,
+body.theme-dark .projects-more-link-alt,
+body.theme-dark .projects-nav-btn,
+body.theme-dark .header-icon-btn,
+body.theme-dark .language-switch,
+html.theme-dark body .about-link-header,
+html.theme-dark body .projects-more-link-alt,
+html.theme-dark body .projects-nav-btn,
+html.theme-dark body .header-icon-btn,
+html.theme-dark body .language-switch {
+  border-color: rgba(114, 158, 220, 0.46);
+  background: linear-gradient(142deg, rgba(25, 44, 74, 0.94), rgba(16, 31, 55, 0.92));
+  color: #dbe9ff;
+  box-shadow: 0 8px 16px rgba(5, 13, 28, 0.32), inset 0 1px 0 rgba(190, 215, 255, 0.12);
+}
+
+body.theme-dark .about-link-header:hover,
+body.theme-dark .projects-more-link-alt:hover,
+body.theme-dark .projects-nav-btn:hover,
+body.theme-dark .header-icon-btn:hover,
+html.theme-dark body .about-link-header:hover,
+html.theme-dark body .projects-more-link-alt:hover,
+html.theme-dark body .projects-nav-btn:hover,
+html.theme-dark body .header-icon-btn:hover {
+  border-color: rgba(132, 188, 255, 0.72);
+  color: #eef5ff;
+  box-shadow: 0 10px 18px rgba(6, 15, 30, 0.4), 0 0 10px rgba(77, 162, 255, 0.2);
+}
+
+html:not(.theme-dark) body .projects-nav-btn[data-action="prev"],
+html:not(.theme-dark) body .projects-nav-btn[data-action="next"] {
+  border-color: rgba(124, 141, 245, 0.72);
+  background: linear-gradient(150deg, rgba(255, 255, 255, 0.98), rgba(234, 240, 255, 0.96));
+  box-shadow:
+    0 10px 18px rgba(49, 64, 142, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+html:not(.theme-dark) body .projects-nav-btn[data-action="prev"]:hover,
+html:not(.theme-dark) body .projects-nav-btn[data-action="next"]:hover {
+  border-color: rgba(105, 110, 255, 0.82);
+  box-shadow:
+    0 12px 22px rgba(43, 59, 148, 0.2),
+    0 0 10px rgba(129, 106, 255, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.98);
+}
+
+body.theme-dark .projects-nav-btn[data-action="prev"],
+body.theme-dark .projects-nav-btn[data-action="next"],
+html.theme-dark body .projects-nav-btn[data-action="prev"],
+html.theme-dark body .projects-nav-btn[data-action="next"] {
+  border-color: rgba(138, 185, 245, 0.64);
+  background: linear-gradient(152deg, rgba(34, 56, 90, 0.96), rgba(18, 36, 64, 0.94));
+  box-shadow:
+    0 10px 18px rgba(4, 11, 24, 0.44),
+    inset 0 1px 0 rgba(212, 230, 255, 0.16);
+}
+
+body.theme-dark .projects-nav-btn[data-action="prev"]:hover,
+body.theme-dark .projects-nav-btn[data-action="next"]:hover,
+html.theme-dark body .projects-nav-btn[data-action="prev"]:hover,
+html.theme-dark body .projects-nav-btn[data-action="next"]:hover {
+  border-color: rgba(162, 208, 255, 0.82);
+  box-shadow:
+    0 12px 20px rgba(4, 12, 25, 0.52),
+    0 0 12px rgba(88, 175, 255, 0.28),
+    inset 0 1px 0 rgba(226, 240, 255, 0.2);
+}
+
+html:not(.theme-dark) body .text-container-header h2 {
+  color: color-mix(in srgb, var(--accent) 84%, #26406e 16%);
+}
