@@ -1257,8 +1257,7 @@
               lastDeltaX: 0,
               isHorizontal: false,
               didMove: false,
-              hasCapturedPointer: false,
-              wasAutoPaused: false
+              hasCapturedPointer: false
             };
             const dragActivationThreshold = 8;
 
@@ -1293,7 +1292,6 @@
               dragState.isHorizontal = false;
               dragState.didMove = false;
               dragState.hasCapturedPointer = false;
-              dragState.wasAutoPaused = false;
               slider.classList.remove('is-dragging');
             }
 
@@ -1305,21 +1303,13 @@
               const isHorizontal = dragState.isHorizontal;
               const didMove = dragState.didMove;
               const hadCapture = dragState.hasCapturedPointer;
-              const wasAutoPaused = dragState.wasAutoPaused;
 
               if (hadCapture) {
                 tryReleaseSliderPointerCapture(pointerId);
               }
               resetSliderDragState();
 
-              if (!isHorizontal) {
-                if (!wasAutoPaused) {
-                  setSliderPaused(state, false, false);
-                }
-                snapLaneToCenter(state, 180);
-                applyLaneTransform(state);
-                return;
-              }
+              if (!isHorizontal) return;
 
               if (didMove) {
                 state.ignoreNextClick = true;
@@ -1349,10 +1339,6 @@
               if (typeof event.button === 'number' && event.button !== 0) return;
               if (state.isManualAnimating) return;
 
-              dragState.wasAutoPaused = state.isAutoPaused;
-              setSliderPaused(state, true, false);
-              snapLaneToCenter(state, 0);
-
               dragState.active = true;
               dragState.pointerId = event.pointerId;
               dragState.startX = event.clientX;
@@ -1369,19 +1355,19 @@
 
               const deltaX = event.clientX - dragState.startX;
               const deltaY = event.clientY - dragState.startY;
-              const absDeltaX = Math.abs(deltaX);
-              const absDeltaY = Math.abs(deltaY);
 
               if (!dragState.isHorizontal) {
-                if (absDeltaX < dragActivationThreshold) {
+                if (Math.abs(deltaX) < dragActivationThreshold && Math.abs(deltaY) < dragActivationThreshold) {
                   return;
                 }
 
-                if (absDeltaX <= absDeltaY * 1.05) {
+                if (Math.abs(deltaY) > Math.abs(deltaX)) {
+                  resetSliderDragState();
                   return;
                 }
 
                 dragState.isHorizontal = true;
+                setSliderPaused(state, true, false);
                 slider.classList.add('is-dragging');
                 trySetSliderPointerCapture(event.pointerId);
                 dragState.hasCapturedPointer = true;
@@ -1389,13 +1375,11 @@
 
               event.preventDefault();
               dragState.didMove = true;
-              const firstCard = state.lane.firstElementChild;
-              const cardStep = firstCard ? getCardStep(firstCard, state) : 0;
-              const maxDrag = cardStep > 0 ? cardStep * 0.72 : 120;
-              const boundedDeltaX = Math.max(-maxDrag, Math.min(maxDrag, deltaX));
-              dragState.lastDeltaX = boundedDeltaX;
+              dragState.lastDeltaX = deltaX;
 
-              state.offset = dragState.startOffset + boundedDeltaX;
+              state.offset = dragState.startOffset + deltaX;
+              normalizeForwardLoop(state);
+              normalizeBackwardLoop(state);
               applyLaneTransform(state);
             }, { passive: false });
 
