@@ -871,9 +871,7 @@
       }
 
       function shouldSkipResizeStabilizer() {
-        if (!isCoarsePointerDevice() || !window.visualViewport) return false;
-        const viewportScale = Number(window.visualViewport.scale) || 1;
-        return viewportScale > 1.01;
+        return isCoarsePointerDevice();
       }
 
       function stabilizeUiDuringResize() {
