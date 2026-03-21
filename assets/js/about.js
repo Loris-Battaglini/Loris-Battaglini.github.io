@@ -901,6 +901,54 @@
         const itemCount = radialMenuItems.length;
         const dragStepThreshold = 34;
 
+        function normalizePathname(pathname) {
+          let normalized = (pathname || '/').toLowerCase().replace(/\\/g, '/');
+          if (normalized.length > 1 && normalized.endsWith('/')) {
+            normalized = normalized.slice(0, -1);
+          }
+          if (normalized.endsWith('/index.html')) {
+            normalized = normalized.slice(0, -11) || '/';
+          }
+          return normalized || '/';
+        }
+
+        function resolveInitialRadialIndex() {
+          const currentPath = normalizePathname(window.location.pathname);
+          const currentHash = (window.location.hash || '').toLowerCase();
+
+          const targets = radialMenuItems.map(function (item) {
+            const href = (item.getAttribute('href') || '').trim();
+            if (!href || href === '#') return null;
+            try {
+              const url = new URL(href, window.location.href);
+              return {
+                path: normalizePathname(url.pathname),
+                hash: (url.hash || '').toLowerCase()
+              };
+            } catch (error) {
+              return null;
+            }
+          });
+
+          if (currentHash) {
+            const hashMatchIndex = targets.findIndex(function (target) {
+              return Boolean(target) && target.path === currentPath && target.hash === currentHash;
+            });
+            if (hashMatchIndex >= 0) return hashMatchIndex;
+          }
+
+          const samePageIndex = targets.findIndex(function (target) {
+            if (!target || target.path !== currentPath) return false;
+            return target.hash === '#top' || target.hash === '' || target.hash === '#';
+          });
+          if (samePageIndex >= 0) return samePageIndex;
+
+          const markupActiveIndex = radialMenuItems.findIndex(function (item) {
+            return item.classList.contains('is-active');
+          });
+          return markupActiveIndex >= 0 ? markupActiveIndex : 0;
+        }
+
         function isPhoneViewport() {
           return phoneViewportQuery ? phoneViewportQuery.matches : window.innerWidth <= 767;
         }
@@ -1159,6 +1207,7 @@
         window.addEventListener('scroll', scheduleRadialWheelSync, { passive: true });
 
         syncWheelGeometry();
+        radialState.activeIndex = resolveInitialRadialIndex();
         renderWheel();
       }
 
