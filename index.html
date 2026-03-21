@@ -572,6 +572,9 @@
       const reducedMotionQuery = typeof window.matchMedia === 'function'
         ? window.matchMedia('(prefers-reduced-motion: reduce)')
         : null;
+      const coarsePointerQuery = typeof window.matchMedia === 'function'
+        ? window.matchMedia('(pointer: coarse)')
+        : null;
       const projectSliderStates = [];
       let activeTimer = null;
       let activeSection = null;
@@ -863,7 +866,26 @@
         return Math.min(max, Math.max(min, value));
       }
 
+      function isCoarsePointerDevice() {
+        return coarsePointerQuery ? coarsePointerQuery.matches : false;
+      }
+
+      function shouldSkipResizeStabilizer() {
+        if (!isCoarsePointerDevice() || !window.visualViewport) return false;
+        const viewportScale = Number(window.visualViewport.scale) || 1;
+        return viewportScale > 1.01;
+      }
+
       function stabilizeUiDuringResize() {
+        if (shouldSkipResizeStabilizer()) {
+          if (resizeStabilizerTimeoutId) {
+            window.clearTimeout(resizeStabilizerTimeoutId);
+            resizeStabilizerTimeoutId = 0;
+          }
+          document.documentElement.classList.remove('is-resizing');
+          return;
+        }
+
         document.documentElement.classList.add('is-resizing');
         if (universeState.isRunning) {
           stopUniverseAnimation(false);
@@ -1225,6 +1247,14 @@
 
       function syncUniverseParticlesState() {
         if (!universeCanvas || !universeState.context) return;
+
+        if (isCoarsePointerDevice()) {
+          universeCanvas.style.display = 'none';
+          stopUniverseAnimation(true);
+          return;
+        }
+
+        universeCanvas.style.display = '';
         const nextThemeMode = getUniverseThemeMode();
         const reduceMotionEnabled = reducedMotionQuery ? reducedMotionQuery.matches : false;
 
@@ -1279,6 +1309,17 @@
             reducedMotionQuery.addEventListener('change', handleReducedMotionChange);
           } else if (typeof reducedMotionQuery.addListener === 'function') {
             reducedMotionQuery.addListener(handleReducedMotionChange);
+          }
+        }
+
+        if (coarsePointerQuery) {
+          const handleCoarsePointerChange = function () {
+            syncUniverseParticlesState();
+          };
+          if (typeof coarsePointerQuery.addEventListener === 'function') {
+            coarsePointerQuery.addEventListener('change', handleCoarsePointerChange);
+          } else if (typeof coarsePointerQuery.addListener === 'function') {
+            coarsePointerQuery.addListener(handleCoarsePointerChange);
           }
         }
       }
