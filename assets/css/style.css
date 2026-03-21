@@ -892,10 +892,12 @@ body:not(.theme-dark) .img-container-header::after {
 }
 
 @media (max-width: 768px), (pointer: coarse) {
-  .right-container-header::before,
-  .right-container-header::after,
   .img-container-header::after {
     display: none;
+  }
+  .right-container-header::after {
+    filter: none;
+    opacity: 0.62;
   }
   .right-container-header {
     --hero-photo-scale: 1.08;
@@ -2477,6 +2479,24 @@ body::before {
   background-size: 42px 42px;
   opacity: 0.2;
   z-index: -1;
+}
+
+@media (max-width: 768px), (pointer: coarse) {
+  body,
+  html:not(.theme-dark) body,
+  body.theme-dark,
+  html.theme-dark body {
+    background: var(--bg);
+  }
+  body::before,
+  html:not(.theme-dark) body::after,
+  body.theme-dark::after,
+  html.theme-dark body::after {
+    display: none;
+  }
+  .universe-canvas {
+    display: none !important;
+  }
 }
 
 html.is-resizing *,
