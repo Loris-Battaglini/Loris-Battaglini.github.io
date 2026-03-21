@@ -577,6 +577,9 @@
       let activeSection = null;
       let projectAnimationFrameId = null;
       let projectAnimationLastTime = 0;
+      let projectSliderViewportWidth = window.innerWidth || document.documentElement.clientWidth || 0;
+      let projectSliderViewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
+      let projectSliderResizeRafId = 0;
       let currentLanguage = DEFAULT_LANGUAGE;
       let isFormSubmitting = false;
 
@@ -1749,11 +1752,33 @@
         refreshSliderToggleButtonsText();
 
         window.addEventListener('resize', function () {
-          projectSliderStates.forEach(function (state) {
-            updateSliderEdgeOffset(state);
-            updateSliderSpeed(state);
-            snapLaneToCenter(state, 0);
-            applyLaneTransform(state);
+          if (projectSliderResizeRafId) {
+            cancelAnimationFrame(projectSliderResizeRafId);
+          }
+
+          projectSliderResizeRafId = requestAnimationFrame(function () {
+            projectSliderResizeRafId = 0;
+
+            const nextWidth = window.innerWidth || document.documentElement.clientWidth || 0;
+            const nextHeight = window.innerHeight || document.documentElement.clientHeight || 0;
+            const widthDelta = Math.abs(nextWidth - projectSliderViewportWidth);
+            const heightDelta = Math.abs(nextHeight - projectSliderViewportHeight);
+
+            projectSliderViewportHeight = nextHeight;
+
+            // Ignore mobile UI bar height-only resizes to avoid abrupt lane resets while scrolling.
+            if (widthDelta < 2 && heightDelta > 0) {
+              return;
+            }
+
+            projectSliderViewportWidth = nextWidth;
+
+            projectSliderStates.forEach(function (state) {
+              updateSliderEdgeOffset(state);
+              updateSliderSpeed(state);
+              normalizeForwardLoop(state);
+              applyLaneTransform(state);
+            });
           });
         });
       }
