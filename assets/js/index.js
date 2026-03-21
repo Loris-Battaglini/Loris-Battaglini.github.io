@@ -100,12 +100,12 @@
         inProgressButton: 'In progress',
         contactHeading: 'Tell me about your project',
         contactIntro: 'Write below and explain what you want to build. I reply within 24 hours. <br>If you prefer, we can also discuss it in a short call.',
-        leadMagnetHeading: 'Free checklist',
+        leadMagnetHeading: 'Free guide',
         leadMagnetText: 'You will also receive a useful guide: <strong>\"Your first credible online presence (even if you are starting from zero)\"</strong>',
         formNameLabel: 'Name',
         formEmailLabel: 'Email',
         formMessageLabel: 'Message',
-        formChecklistConsent: 'Yes, I also want to receive the free checklist by email.',
+        formChecklistConsent: 'Yes, I also want to receive the free guide by email.',
         formHoneypotLabel: 'Do not fill in this field'
       };
       const ENGLISH_PLACEHOLDERS = {
@@ -341,7 +341,7 @@
 
       function getStoredTheme() {
         const theme = safeStorageGet(STORAGE_KEYS.theme);
-        return theme === 'dark' ? 'dark' : 'light';
+        return theme === 'light' ? 'light' : 'dark';
       }
 
       function getTranslatedText(key) {
