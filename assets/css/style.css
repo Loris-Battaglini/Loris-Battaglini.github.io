@@ -2500,6 +2500,17 @@ body::before {
   z-index: -1;
 }
 
+html.is-resizing *,
+html.is-resizing *::before,
+html.is-resizing *::after {
+  animation: none !important;
+  transition: none !important;
+}
+
+html.is-resizing .universe-canvas {
+  opacity: 0 !important;
+}
+
 .universe-canvas {
   position: fixed;
   inset: 0;

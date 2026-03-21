@@ -580,6 +580,7 @@
       let projectSliderViewportWidth = window.innerWidth || document.documentElement.clientWidth || 0;
       let projectSliderViewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
       let projectSliderResizeRafId = 0;
+      let resizeStabilizerTimeoutId = 0;
       let currentLanguage = DEFAULT_LANGUAGE;
       let isFormSubmitting = false;
 
@@ -861,6 +862,19 @@
       function clampValue(value, min, max) {
         return Math.min(max, Math.max(min, value));
       }
+
+      function stabilizeUiDuringResize() {
+        document.documentElement.classList.add('is-resizing');
+        if (resizeStabilizerTimeoutId) {
+          window.clearTimeout(resizeStabilizerTimeoutId);
+        }
+        resizeStabilizerTimeoutId = window.setTimeout(function () {
+          document.documentElement.classList.remove('is-resizing');
+          resizeStabilizerTimeoutId = 0;
+        }, 180);
+      }
+
+      window.addEventListener('resize', stabilizeUiDuringResize, { passive: true });
 
       function randomBetween(min, max) {
         return min + Math.random() * (max - min);
