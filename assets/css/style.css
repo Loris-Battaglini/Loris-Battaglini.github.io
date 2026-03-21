@@ -747,11 +747,11 @@ html.theme-dark body.radial-menu-open .radial-menu-item.is-active {
   --hero-photo-brightness: 1.06;
   --hero-photo-saturate: 0.96;
   --hero-photo-contrast: 0.95;
-  --hero-photo-wrap-scale: 1.32;
-  --hero-photo-wrap-x: -1.65%;
-  --hero-photo-wrap-y: 0.55%;
-  --hero-photo-scale: 1.2;
-  --hero-photo-y: -0.92%;
+  --hero-photo-wrap-scale: 1.26;
+  --hero-photo-wrap-x: -1.25%;
+  --hero-photo-wrap-y: 0.45%;
+  --hero-photo-scale: 1.16;
+  --hero-photo-y: -0.55%;
   width: min(100%, 372px);
   aspect-ratio: 4/5;
   position: relative;
@@ -883,15 +883,13 @@ body:not(.theme-dark) .img-container-header::after {
 .home-hero-cutout-media {
   width: calc(var(--hero-photo-wrap-scale) * 100%);
   max-width: 530px;
-  transform: translate3d(calc(var(--hero-photo-wrap-x) - 7px), calc(var(--hero-photo-wrap-y) + 8px), 0);
+  transform: translate3d(calc(var(--hero-photo-wrap-x) - clamp(4px, 0.55vw, 7px)), calc(var(--hero-photo-wrap-y) + clamp(5px, 0.75vw, 8px)), 0);
   -webkit-mask-image: none;
   mask-image: none;
   display: block;
   background: transparent;
   position: relative;
   z-index: 3;
-  will-change: transform;
-  backface-visibility: hidden;
 }
 
 .foto-loris {
@@ -900,11 +898,23 @@ body:not(.theme-dark) .img-container-header::after {
   background: transparent;
   object-fit: contain;
   object-position: center bottom;
-  transform: translate3d(0, calc(var(--hero-photo-y) - 15px), 0) scale(var(--hero-photo-scale));
+  transform: translate3d(0, calc(var(--hero-photo-y) - clamp(9px, 1vw, 15px)), 0) scale(var(--hero-photo-scale));
   transform-origin: center bottom;
   filter: drop-shadow(0 12px 20px var(--hero-photo-shadow)) brightness(var(--hero-photo-brightness)) saturate(var(--hero-photo-saturate)) contrast(var(--hero-photo-contrast));
-  will-change: transform;
-  backface-visibility: hidden;
+}
+
+@media (max-width: 1240px) {
+  .right-container-header {
+    --hero-photo-wrap-scale: 1.19;
+    --hero-photo-wrap-x: -0.8%;
+    --hero-photo-wrap-y: 0.32%;
+    --hero-photo-scale: 1.11;
+    --hero-photo-y: -0.2%;
+    width: min(100%, 356px);
+  }
+  .home-hero-cutout-media {
+    max-width: 500px;
+  }
 }
 
 @media (max-width: 992px) {
@@ -937,7 +947,7 @@ body:not(.theme-dark) .img-container-header::after {
   .home-hero-cutout-media {
     width: calc(var(--hero-photo-wrap-scale) * 100%);
     max-width: 440px;
-    transform: translate3d(calc(var(--hero-photo-wrap-x) - 7px), calc(var(--hero-photo-wrap-y) + 8px), 0);
+    transform: translate3d(calc(var(--hero-photo-wrap-x) - clamp(4px, 0.7vw, 7px)), calc(var(--hero-photo-wrap-y) + clamp(5px, 0.95vw, 8px)), 0);
   }
 }
 @media (min-width: 641px) and (max-width: 992px) {
