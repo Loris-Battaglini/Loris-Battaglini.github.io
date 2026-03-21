@@ -2535,6 +2535,15 @@ html.is-resizing .img-container-header::after {
   opacity: 0 !important;
 }
 
+@media (max-width: 768px), (pointer: coarse) {
+  html.is-resizing .right-container-header::before {
+    opacity: 1 !important;
+  }
+  html.is-resizing .right-container-header::after {
+    opacity: 0.62 !important;
+  }
+}
+
 .universe-canvas {
   position: fixed;
   inset: 0;
