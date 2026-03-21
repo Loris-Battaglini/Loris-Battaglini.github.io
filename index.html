@@ -1597,9 +1597,6 @@
                   if (Math.abs(deltaX) < 8 && Math.abs(deltaY) < 8) return;
                   if (Math.abs(deltaX) > Math.abs(deltaY) * 0.65) {
                     pointerSwipe.hasHorizontalIntent = true;
-                    if (!state.isAutoPaused) {
-                      setSliderPaused(state, true, false);
-                    }
                   }
                 }
 
@@ -1696,9 +1693,6 @@
                 if (Math.abs(deltaX) < 8 && Math.abs(deltaY) < 8) return;
                 if (Math.abs(deltaX) > Math.abs(deltaY) * 0.65) {
                   touchSwipe.hasHorizontalIntent = true;
-                  if (!state.isAutoPaused) {
-                    setSliderPaused(state, true, false);
-                  }
                 }
               }
 
