@@ -2149,16 +2149,22 @@ footer textarea:focus {
 
 .about-before-after-media {
   --reveal: 50%;
-  --compare-scale: 1.42;
-  --compare-position-y: 22%;
-  --compare-offset-before: 1.4%;
-  --compare-offset-after: -1.4%;
+  --compare-scale-before: 3.68;
+  --compare-scale-after: 1.62;
+  --compare-position-before-x: 50%;
+  --compare-position-before-y: 50%;
+  --compare-position-after-x: 50%;
+  --compare-position-after-y: 50%;
+  --compare-offset-before: -4%;
+  --compare-offset-after: -12%;
+  --compare-offset-before-y: calc(16% + 5px);
+  --compare-offset-after-y: 14%;
   position: relative;
   aspect-ratio: 4/5;
   border: 1px solid var(--line);
   border-radius: 1rem;
   overflow: hidden;
-  background: var(--card-bg);
+  background: #0d1420;
   box-shadow: 0 14px 26px rgba(20, 34, 59, 0.14);
 }
 
@@ -2168,25 +2174,32 @@ footer textarea:focus {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  object-position: 50% var(--compare-position-y);
-  padding: clamp(0.1rem, 0.45vw, 0.35rem);
-  filter: drop-shadow(0 16px 24px rgba(8, 18, 36, 0.24));
+  object-position: var(--compare-position-x, 50%) var(--compare-position-y, 50%);
+  filter: drop-shadow(0 10px 18px rgba(8, 18, 36, 0.16));
   pointer-events: none;
-  transform-origin: center top;
-  transform: translate3d(var(--compare-offset, 0), 0, 0) scale(var(--compare-scale));
+  transform-origin: center center;
+  transform: translate3d(var(--compare-offset-x, 0), var(--compare-offset-y, 0), 0) scale(var(--compare-scale, 1));
   backface-visibility: hidden;
   will-change: transform, clip-path;
 }
 
 .about-photo-before {
-  --compare-offset: var(--compare-offset-before);
+  --compare-offset-x: var(--compare-offset-before);
+  --compare-offset-y: var(--compare-offset-before-y);
+  --compare-scale: var(--compare-scale-before);
+  --compare-position-x: var(--compare-position-before-x);
+  --compare-position-y: var(--compare-position-before-y);
   z-index: 2;
   clip-path: inset(0 calc(100% - var(--reveal)) 0 0);
   -webkit-clip-path: inset(0 calc(100% - var(--reveal)) 0 0);
 }
 
 .about-photo-after {
-  --compare-offset: var(--compare-offset-after);
+  --compare-offset-x: var(--compare-offset-after);
+  --compare-offset-y: var(--compare-offset-after-y);
+  --compare-scale: var(--compare-scale-after);
+  --compare-position-x: var(--compare-position-after-x);
+  --compare-position-y: var(--compare-position-after-y);
   z-index: 1;
   clip-path: inset(0 0 0 var(--reveal));
   -webkit-clip-path: inset(0 0 0 var(--reveal));
@@ -2383,8 +2396,13 @@ footer textarea:focus {
     margin-inline: auto;
   }
   .about-before-after-media {
-    --compare-scale: 1.34;
-    --compare-position-y: 20%;
+    --compare-scale-before: 3.46;
+    --compare-scale-after: 1.52;
+    --compare-position-before-y: 50%;
+    --compare-position-after-y: 50%;
+    --compare-offset-before: -3%;
+    --compare-offset-before-y: calc(14.4% + 5px);
+    --compare-offset-after-y: 12%;
   }
 }
 @media (max-width: 640px) {
@@ -2407,10 +2425,14 @@ footer textarea:focus {
   }
   .about-before-after-media {
     aspect-ratio: 4/5;
-    --compare-scale: 1.24;
-    --compare-position-y: 18%;
-    --compare-offset-before: 1%;
-    --compare-offset-after: -1%;
+    --compare-scale-before: 3.24;
+    --compare-scale-after: 1.42;
+    --compare-position-before-y: 50%;
+    --compare-position-after-y: 50%;
+    --compare-offset-before: -2.5%;
+    --compare-offset-after: -10%;
+    --compare-offset-before-y: calc(13.2% + 5px);
+    --compare-offset-after-y: 11%;
   }
   .about-contact-link {
     justify-self: stretch;
