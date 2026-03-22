@@ -1932,7 +1932,7 @@ footer textarea:focus {
 .about-hero-cutout-media {
   width: 118%;
   max-width: 430px;
-  transform: translateX(-2%) translateY(1%);
+  transform: translateX(-2%) translateY(clamp(12px, 2vw, 22px));
   display: block;
   background: transparent;
   position: relative;
