@@ -234,7 +234,7 @@
 
       function getStoredTheme() {
         const theme = safeStorageGet(STORAGE_KEYS.theme);
-        return theme === 'light' ? 'light' : 'dark';
+        return theme === 'dark' ? 'dark' : 'light';
       }
 
       function getDynamicString(key) {
