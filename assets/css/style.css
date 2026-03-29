@@ -2126,6 +2126,7 @@ footer textarea:focus {
 
 .about-before-after-media {
   --reveal: 50%;
+  --reveal-px: 50%;
   --compare-scale-before: 3.95;
   --compare-scale-after: 1.62;
   --compare-position-before-x: 50%;
@@ -2143,6 +2144,26 @@ footer textarea:focus {
   overflow: hidden;
   background: #0d1420;
   box-shadow: 0 14px 26px rgba(20, 34, 59, 0.14);
+}
+
+.about-before-layer,
+.about-after-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  will-change: clip-path;
+}
+
+.about-before-layer {
+  z-index: 2;
+  clip-path: inset(0 calc(100% - var(--reveal-px, var(--reveal))) 0 0);
+  -webkit-clip-path: inset(0 calc(100% - var(--reveal-px, var(--reveal))) 0 0);
+}
+
+.about-after-layer {
+  z-index: 1;
+  clip-path: inset(0 0 0 var(--reveal-px, var(--reveal)));
+  -webkit-clip-path: inset(0 0 0 var(--reveal-px, var(--reveal)));
 }
 
 .about-before-after-media img {
@@ -2166,9 +2187,6 @@ footer textarea:focus {
   --compare-scale: var(--compare-scale-before);
   --compare-position-x: var(--compare-position-before-x);
   --compare-position-y: var(--compare-position-before-y);
-  z-index: 2;
-  clip-path: inset(0 calc(100% - var(--reveal)) 0 0);
-  -webkit-clip-path: inset(0 calc(100% - var(--reveal)) 0 0);
 }
 
 .about-photo-after {
@@ -2177,16 +2195,13 @@ footer textarea:focus {
   --compare-scale: var(--compare-scale-after);
   --compare-position-x: var(--compare-position-after-x);
   --compare-position-y: var(--compare-position-after-y);
-  z-index: 1;
-  clip-path: inset(0 0 0 var(--reveal));
-  -webkit-clip-path: inset(0 0 0 var(--reveal));
 }
 
 .about-before-after-divider {
   position: absolute;
   top: 0;
   bottom: 0;
-  left: var(--reveal);
+  left: var(--reveal-px, var(--reveal));
   width: 2px;
   background: #fff;
   transform: translateX(-50%);
@@ -2221,6 +2236,7 @@ footer textarea:focus {
   height: 100%;
   opacity: 0;
   cursor: ew-resize;
+  touch-action: none;
   z-index: 4;
 }
 

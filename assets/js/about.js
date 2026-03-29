@@ -770,15 +770,82 @@
         const media = block.querySelector('.about-before-after-media');
         const range = block.querySelector('.about-before-after-range');
         if (!media || !range) return;
+        const dragState = {
+          isActive: false,
+          pointerId: null
+        };
 
         function syncReveal(value) {
           const nextValue = Math.min(100, Math.max(0, Number(value)));
+          const mediaWidth = media.clientWidth || media.getBoundingClientRect().width || 0;
+          const revealPixels = (mediaWidth * nextValue) / 100;
           media.style.setProperty('--reveal', nextValue + '%');
+          media.style.setProperty('--reveal-px', revealPixels + 'px');
+        }
+
+        function syncRevealFromClientX(clientX) {
+          const rect = media.getBoundingClientRect();
+          if (!rect.width) return;
+          const normalized = (clientX - rect.left) / rect.width;
+          const nextValue = Math.min(100, Math.max(0, normalized * 100));
+          range.value = String(nextValue);
+          syncReveal(nextValue);
         }
 
         range.addEventListener('input', function () {
           syncReveal(range.value);
         });
+
+        range.addEventListener('pointerdown', function (event) {
+          dragState.isActive = true;
+          dragState.pointerId = event.pointerId;
+          if (typeof range.setPointerCapture === 'function') {
+            try {
+              range.setPointerCapture(event.pointerId);
+            } catch (error) {
+              // Ignore pointer capture errors to preserve interaction flow.
+            }
+          }
+          syncRevealFromClientX(event.clientX);
+          event.preventDefault();
+        });
+
+        range.addEventListener('pointermove', function (event) {
+          if (!dragState.isActive || event.pointerId !== dragState.pointerId) return;
+          syncRevealFromClientX(event.clientX);
+          event.preventDefault();
+        });
+
+        function stopDrag(event) {
+          if (event.pointerId !== dragState.pointerId) return;
+          dragState.isActive = false;
+          dragState.pointerId = null;
+          if (typeof range.releasePointerCapture === 'function') {
+            try {
+              range.releasePointerCapture(event.pointerId);
+            } catch (error) {
+              // Pointer might already be released by the browser.
+            }
+          }
+        }
+
+        range.addEventListener('pointerup', stopDrag);
+        range.addEventListener('pointercancel', stopDrag);
+
+        media.addEventListener('click', function (event) {
+          syncRevealFromClientX(event.clientX);
+        });
+
+        if (typeof window.ResizeObserver === 'function') {
+          const observer = new window.ResizeObserver(function () {
+            syncReveal(range.value);
+          });
+          observer.observe(media);
+        } else {
+          window.addEventListener('resize', function () {
+            syncReveal(range.value);
+          }, { passive: true });
+        }
 
         syncReveal(range.value || 50);
       });
